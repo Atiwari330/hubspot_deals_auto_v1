@@ -246,15 +246,15 @@ async function generateEmailReport(
 
   try {
     const { text } = await generateText({
-      model: openai('gpt-4o-mini'),
+      model: openai('gpt-5-mini'),
       prompt: `You are assisting a VP of Revenue Operations at a software company that sells EHR (Electronic Health Records) systems.
 
-Your task is to create a professional, concise email that the VP can send to their sales team every other day about HubSpot deal hygiene.
+Your task is to create a professional email that the VP can send to their sales team every other day about HubSpot deal hygiene.
 
 CONTEXT:
 - The VP needs to ensure all deals have complete, required information
 - This is a regular reminder email (sent every other day)
-- The team is busy, so keep it actionable and under 500 words
+- The team is busy, so keep it actionable
 - Tone should be professional but motivating - you want to drive action without being harsh
 
 DATA SUMMARY:
@@ -268,23 +268,29 @@ ${JSON.stringify(dataForAI.dealsByOwner, null, 2)}
 TOP MISSING FIELDS ACROSS ALL DEALS:
 ${JSON.stringify(dataForAI.topMissingProperties, null, 2)}
 
-REQUIREMENTS FOR THE EMAIL:
+CRITICAL REQUIREMENTS:
 1. Start with a clear, action-oriented subject line (include this)
 2. Brief opening (1-2 sentences) about the health check
 3. Organize by deal owner so each person can see their action items
-4. For each owner, list their critical deals with missing fields
-5. Include a summary of the most commonly missing fields
-6. End with a clear call-to-action and timeline
-7. Keep the tone professional but friendly - this is a helpful reminder, not a reprimand
-8. Under 500 words total
-9. Make it easy to scan (use bullets, short paragraphs)
+4. YOU MUST LIST EVERY SINGLE DEAL - Do NOT summarize, truncate, or use phrases like "other deals" or "listed similarly"
+5. For EACH deal, show: deal name and the specific missing fields
+6. Include a summary of the most commonly missing fields at the end
+7. End with a clear call-to-action and timeline
+8. Keep the tone professional but friendly - this is a helpful reminder, not a reprimand
 
-FORMAT THE EMAIL AS:
+FORMATTING REQUIREMENTS:
+- Use PLAIN TEXT ONLY - NO markdown formatting
+- Do NOT use asterisks (**), underscores (_), or any markup symbols for bold/italic
+- Do NOT use markdown bullets - use plain hyphens (-) for lists
+- The email will be copied directly into an email client, so it must be plain text
+- Make it easy to scan with clear sections and line breaks
+
+FORMAT THE EMAIL EXACTLY AS:
 Subject: [Your subject line]
 
-[Email body]
+[Email body with all deals listed]
 
-Do NOT include any meta-commentary, explanations, or notes - just output the email exactly as it should be sent.`,
+IMPORTANT: Do NOT include any meta-commentary, explanations, or notes - just output the email exactly as it should be sent. List EVERY single deal for EVERY owner - do not abbreviate or summarize.`,
     });
 
     return text;
