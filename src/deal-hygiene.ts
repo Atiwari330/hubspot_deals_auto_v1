@@ -122,10 +122,10 @@ function createSummary(reports: DealHygieneReport[]): HygieneSummary {
  */
 function displayReport(summary: HygieneSummary) {
   console.log('\n' + '━'.repeat(80));
-  console.log('DEAL HYGIENE REPORT');
+  console.log('DEAL HYGIENE REPORT - SALES PIPELINE ONLY');
   console.log('━'.repeat(80));
 
-  console.log(`\n📊 Analyzed: ${summary.totalDeals} deal(s) in "Proposal" and "Demo - Completed" stages`);
+  console.log(`\n📊 Analyzed: ${summary.totalDeals} deal(s) in Sales pipeline ("Proposal" and "Demo - Completed" stages)`);
   console.log(`📈 Overall Health: ${summary.averageCompleteness}% complete (average)\n`);
 
   // Critical issues section
@@ -258,7 +258,7 @@ CONTEXT:
 - Tone should be professional but motivating - you want to drive action without being harsh
 
 DATA SUMMARY:
-- Total deals analyzed: ${dataForAI.totalDeals} (in Proposal and Demo stages)
+- Total deals analyzed: ${dataForAI.totalDeals} (Sales pipeline only - Proposal and Demo stages)
 - Overall health: ${dataForAI.overallHealth}% complete (average)
 - Critical issues: ${dataForAI.criticalDealsCount} deals missing 3+ required fields
 
@@ -320,15 +320,24 @@ async function main() {
     // Fetch all pipelines and stages
     const pipelines = await fetchPipelines(accessToken);
 
-    // Find stages matching "proposal" and "demo"
+    // Find the Sales pipeline
+    const salesPipeline = pipelines.find(p => p.label === 'Sales');
+    if (!salesPipeline) {
+      throw new Error('Sales pipeline not found');
+    }
+
+    console.log(`✅ Found Sales pipeline (ID: ${salesPipeline.id})\n`);
+
+    // Find stages matching "proposal" and "demo" ONLY in Sales pipeline
     const targetStages = ['proposal', 'demo'];
-    const stageIds = findStageIdsByLabels(pipelines, targetStages);
+    const salesPipelineOnly = [salesPipeline];
+    const stageIds = findStageIdsByLabels(salesPipelineOnly, targetStages);
 
-    console.log(`✅ Found ${stageIds.length} matching stage(s)\n`);
-    console.log('📋 Fetching deals in these stages...\n');
+    console.log(`✅ Found ${stageIds.length} matching stage(s) in Sales pipeline\n`);
+    console.log('📋 Fetching deals in Sales pipeline only...\n');
 
-    // Search for deals in those stages
-    const result = await searchDealsByStages(accessToken, stageIds);
+    // Search for deals in those stages, restricted to Sales pipeline
+    const result = await searchDealsByStages(accessToken, stageIds, salesPipeline.id);
 
     console.log('💼 Fetching owner information...\n');
 
