@@ -1,0 +1,50 @@
+name: Daily Deal Hygiene Check
+
+# Schedule to run every day at 8:00 AM EST (1:00 PM UTC)
+# Adjust the cron schedule based on your timezone
+on:
+  schedule:
+    # Runs at 1:00 PM UTC (8:00 AM EST)
+    # Format: minute hour day-of-month month day-of-week
+    - cron: '0 13 * * *'
+
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  deal-hygiene:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4: Run the deal hygiene script
+      - name: Run deal hygiene check
+        env:
+          HUBSPOT_ACCESS_TOKEN: ${{ secrets.HUBSPOT_ACCESS_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npm run deal-hygiene
+
+      # Step 5: Upload results as artifact (optional - saves the console output)
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deal-hygiene-report-${{ github.run_number }}
+          path: |
+            ./*.log
+            ./*.txt
+          if-no-files-found: ignore
