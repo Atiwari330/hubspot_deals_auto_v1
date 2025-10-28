@@ -1,12 +1,12 @@
 name: Daily Deal Hygiene Check
 
-# Schedule to run every day at 8:00 AM EST (1:00 PM UTC)
-# Adjust the cron schedule based on your timezone
+# Schedule to run twice daily: 8:00 AM EST and 1:20 PM EST
 on:
   schedule:
     # Runs at 1:00 PM UTC (8:00 AM EST)
-    # Format: minute hour day-of-month month day-of-week
     - cron: '0 13 * * *'
+    # Runs at 6:20 PM UTC (1:20 PM EST)
+    - cron: '20 18 * * *'
 
   # Allow manual trigger for testing
   workflow_dispatch:
