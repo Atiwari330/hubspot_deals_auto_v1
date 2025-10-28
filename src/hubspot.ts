@@ -154,6 +154,13 @@ export async function searchDealsByStages(
       'hs_all_owner_ids',
       'hs_all_team_ids',
       'hs_all_accessible_team_ids',
+
+      // Custom properties for Deal Hygiene
+      'hs_next_meeting_start_time',  // Next Meeting Start Time
+      'product_s',                     // Product/s
+      'prior_ehr',                     // Prior EHR
+      'hs_all_collaborator_owner_ids', // Deal Collaborator
+      'proposal_stage',                // Deal Substage
     ],
     limit: 100,
   };

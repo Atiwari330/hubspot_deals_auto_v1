@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "fetch-deals": "tsx src/index.ts",
+    "discover-properties": "tsx src/properties-discovery.ts",
+    "deal-hygiene": "tsx src/deal-hygiene.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
