@@ -48,6 +48,17 @@ async function main() {
     // Fetch all owners
     const ownersMap = await fetchOwners(accessToken, ownerIds);
 
+    // Create mappings for stage IDs to stage names and pipeline IDs to pipeline names
+    const stageMap = new Map<string, string>();
+    const pipelineMap = new Map<string, string>();
+
+    for (const pipeline of pipelines) {
+      pipelineMap.set(pipeline.id, pipeline.label);
+      for (const stage of pipeline.stages) {
+        stageMap.set(stage.id, stage.label);
+      }
+    }
+
     console.log('━'.repeat(80));
     console.log(`\n✅ Found ${result.total} deal(s) in "Proposal" and "Demo - Completed" stages:\n`);
     console.log('━'.repeat(80));
@@ -62,14 +73,23 @@ async function main() {
 
         // Basic Information
         console.log(`   📌 ID: ${deal.id}`);
-        console.log(`   📊 Pipeline: ${props.pipeline || 'N/A'}`);
-        console.log(`   🎯 Stage: ${props.dealstage || 'N/A'}`);
+
+        // Pipeline and Stage with readable names
+        const pipelineName = props.pipeline ? (pipelineMap.get(props.pipeline) || props.pipeline) : 'N/A';
+        const stageName = props.dealstage ? (stageMap.get(props.dealstage) || props.dealstage) : 'N/A';
+        console.log(`   📊 Pipeline: ${pipelineName}`);
+        console.log(`   🎯 Stage: ${stageName}`);
 
         // Owner Information
         if (owner) {
           console.log(`   👤 Owner: ${owner.firstName} ${owner.lastName} (${owner.email})`);
         } else if (props.hubspot_owner_id) {
           console.log(`   👤 Owner ID: ${props.hubspot_owner_id}`);
+        }
+
+        // Next Step (if available)
+        if (props.hs_next_step) {
+          console.log(`   ➡️  Next Step: ${props.hs_next_step}`);
         }
 
         // Financial Details
@@ -87,6 +107,9 @@ async function main() {
         console.log(`   📅 Close Date: ${props.closedate ? new Date(props.closedate).toLocaleDateString() : 'N/A'}`);
         if (props.hs_lastmodifieddate) {
           console.log(`   📅 Last Modified: ${new Date(props.hs_lastmodifieddate).toLocaleDateString()}`);
+        }
+        if (props.hs_lastactivitydate) {
+          console.log(`   📅 Last Activity: ${new Date(props.hs_lastactivitydate).toLocaleDateString()}`);
         }
 
         // Deal Type & Priority
@@ -128,8 +151,8 @@ async function main() {
         const displayedProps = [
           'dealname', 'pipeline', 'dealstage', 'hubspot_owner_id', 'amount',
           'amount_in_home_currency', 'hs_tcv', 'hs_arr', 'hs_mrr', 'hs_acv',
-          'createdate', 'closedate', 'hs_lastmodifieddate', 'dealtype', 'hs_priority',
-          'hs_deal_stage_probability', 'description', 'hs_analytics_source', 'hs_campaign',
+          'createdate', 'closedate', 'hs_lastmodifieddate', 'hs_lastactivitydate', 'dealtype', 'hs_priority',
+          'hs_next_step', 'hs_deal_stage_probability', 'description', 'hs_analytics_source', 'hs_campaign',
           'num_notes', 'num_contacted_notes', 'hs_forecast_amount', 'hs_manual_forecast_category'
         ];
 
