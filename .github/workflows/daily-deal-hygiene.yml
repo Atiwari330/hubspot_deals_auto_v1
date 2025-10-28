@@ -1,12 +1,12 @@
 name: Daily Deal Hygiene Check
 
-# Schedule to run twice daily: 8:00 AM EST and 1:20 PM EST
+# Schedule to run twice daily: 8:00 AM EDT and 1:28 PM EDT (Miami, Florida)
 on:
   schedule:
-    # Runs at 1:00 PM UTC (8:00 AM EST)
-    - cron: '0 13 * * *'
-    # Runs at 6:20 PM UTC (1:20 PM EST)
-    - cron: '20 18 * * *'
+    # Runs at 12:00 PM UTC (8:00 AM EDT)
+    - cron: '0 12 * * *'
+    # Runs at 5:28 PM UTC (1:28 PM EDT)
+    - cron: '28 17 * * *'
 
   # Allow manual trigger for testing
   workflow_dispatch:
