@@ -18,16 +18,7 @@ export interface Pipeline {
 
 export interface Deal {
   id: string;
-  properties: {
-    dealname?: string;
-    dealstage?: string;
-    pipeline?: string;
-    amount?: string;
-    closedate?: string;
-    hubspot_owner_id?: string;
-    hs_object_id?: string;
-    createdate?: string;
-  };
+  properties: Record<string, any>; // Allow any properties
   createdAt: string;
   updatedAt: string;
 }
@@ -35,6 +26,13 @@ export interface Deal {
 export interface SearchDealsResponse {
   results: Deal[];
   total: number;
+}
+
+export interface Owner {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
 }
 
 /**
@@ -86,14 +84,74 @@ export async function searchDealsByStages(
   const searchBody = {
     filterGroups: filters.length > 0 ? [{ filters }] : [],
     properties: [
+      // Basic Info
       'dealname',
       'dealstage',
       'pipeline',
-      'amount',
-      'closedate',
-      'hubspot_owner_id',
       'hs_object_id',
+
+      // Financial
+      'amount',
+      'amount_in_home_currency',
+      'hs_tcv',
+      'hs_arr',
+      'hs_mrr',
+      'hs_acv',
+
+      // Dates
       'createdate',
+      'closedate',
+      'hs_lastmodifieddate',
+      'hs_date_entered_appointmentscheduled',
+      'hs_date_exited_appointmentscheduled',
+      'hs_date_entered_qualifiedtobuy',
+      'hs_date_exited_qualifiedtobuy',
+      'hs_date_entered_presentationscheduled',
+      'hs_date_exited_presentationscheduled',
+      'hs_date_entered_closedwon',
+      'hs_date_entered_closedlost',
+
+      // Owner & Team
+      'hubspot_owner_id',
+      'hubspot_team_id',
+
+      // Deal Details
+      'dealtype',
+      'description',
+      'hs_priority',
+      'hs_deal_stage_probability',
+      'hs_forecast_amount',
+      'hs_forecast_probability',
+      'hs_manual_forecast_category',
+
+      // Source & Campaign
+      'hs_analytics_source',
+      'hs_analytics_source_data_1',
+      'hs_analytics_source_data_2',
+      'hs_campaign',
+
+      // Engagement
+      'notes_last_contacted',
+      'notes_last_updated',
+      'notes_next_activity_date',
+      'num_contacted_notes',
+      'num_notes',
+
+      // Custom fields (common ones)
+      'hs_closed_amount',
+      'hs_closed_amount_in_home_currency',
+      'hs_deal_amount_calculation_preference',
+      'hs_is_closed',
+      'hs_is_closed_won',
+      'hs_projected_amount',
+      'hs_projected_amount_in_home_currency',
+
+      // Additional metadata
+      'hs_created_by_user_id',
+      'hs_updated_by_user_id',
+      'hs_all_owner_ids',
+      'hs_all_team_ids',
+      'hs_all_accessible_team_ids',
     ],
     limit: 100,
   };
@@ -141,4 +199,60 @@ export function findStageIdsByLabels(
   }
 
   return stageIds;
+}
+
+/**
+ * Fetches owner details by owner ID
+ */
+export async function fetchOwner(accessToken: string, ownerId: string): Promise<Owner | null> {
+  if (!ownerId) return null;
+
+  try {
+    const response = await fetch(`${HUBSPOT_API_BASE}/crm/v3/owners/${ownerId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      return null; // Return null if owner not found
+    }
+
+    const data = await response.json();
+    return {
+      id: data.id,
+      email: data.email,
+      firstName: data.firstName || '',
+      lastName: data.lastName || '',
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Fetches multiple owners in batch
+ */
+export async function fetchOwners(
+  accessToken: string,
+  ownerIds: string[]
+): Promise<Map<string, Owner>> {
+  const ownerMap = new Map<string, Owner>();
+  const uniqueOwnerIds = [...new Set(ownerIds.filter(id => id))];
+
+  // Fetch owners in parallel
+  const ownerPromises = uniqueOwnerIds.map(ownerId =>
+    fetchOwner(accessToken, ownerId)
+  );
+
+  const owners = await Promise.all(ownerPromises);
+
+  owners.forEach((owner, index) => {
+    if (owner) {
+      ownerMap.set(uniqueOwnerIds[index], owner);
+    }
+  });
+
+  return ownerMap;
 }
