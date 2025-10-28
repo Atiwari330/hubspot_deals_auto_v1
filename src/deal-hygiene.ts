@@ -251,44 +251,84 @@ async function generateEmailReport(
 
 Your task is to create a professional email that the VP can send to their sales team every other day about HubSpot deal hygiene.
 
-CONTEXT:
+<context>
 - The VP needs to ensure all deals have complete, required information
 - This is a regular reminder email (sent every other day)
-- The team is busy, so keep it actionable
-- Tone should be professional but motivating - you want to drive action without being harsh
+- Tone should be professional but casual - this is a helpful FYI, not demanding
+- The team is busy, so keep it actionable but not bossy
+</context>
 
-DATA SUMMARY:
-- Total deals analyzed: ${dataForAI.totalDeals} (Sales pipeline only - Proposal and Demo stages)
-- Overall health: ${dataForAI.overallHealth}% complete (average)
-- Critical issues: ${dataForAI.criticalDealsCount} deals missing 3+ required fields
+<data>
+Total deals analyzed: ${dataForAI.totalDeals} (Sales pipeline only - Proposal and Demo stages)
+Overall health: ${dataForAI.overallHealth}% complete (average)
+Critical issues: ${dataForAI.criticalDealsCount} deals missing 3+ required fields
 
-DEALS BY OWNER (Critical Issues Only):
+Deals by owner (critical issues only):
 ${JSON.stringify(dataForAI.dealsByOwner, null, 2)}
 
-TOP MISSING FIELDS ACROSS ALL DEALS:
+Top missing fields across all deals:
 ${JSON.stringify(dataForAI.topMissingProperties, null, 2)}
+</data>
 
-CRITICAL REQUIREMENTS:
-1. Start with a clear, action-oriented subject line (include this)
-2. Brief opening (1-2 sentences) about the health check
-3. Organize by deal owner so each person can see their action items
-4. YOU MUST LIST EVERY SINGLE DEAL - Do NOT summarize, truncate, or use phrases like "other deals" or "listed similarly"
-5. For EACH deal, show: deal name and the specific missing fields
-6. Include a summary of the most commonly missing fields at the end
-7. End with a clear call-to-action and timeline
-8. Keep the tone professional but friendly - this is a helpful reminder, not a reprimand
+<requirements>
+SUBJECT LINE:
+- MUST be exactly: "HubSpot Deal Hygiene Report"
+- Do NOT vary or customize the subject
 
-FORMATTING REQUIREMENTS:
+OPENING:
+- Start with "Quick health check:" followed by 1-2 sentences about the stats
+- Include total deals, pipeline name, overall health percentage, and number of critical deals
+
+BODY - DEALS BY OWNER:
+- Organize by owner name
+- YOU MUST LIST EVERY SINGLE DEAL - Do NOT summarize, truncate, or use phrases like "other deals" or "listed similarly"
+- For each deal show: deal name (with Deal ID if available) and specific missing fields
+- Use plain hyphens (-) for lists
+
+BODY - MISSING FIELDS SUMMARY:
+- Include "Most commonly missing fields" section
+- Show top 5 missing fields with count and percentage
+
+CALL-TO-ACTION:
+- MUST be simple and casual: "When you have some time, please make sure these deals are updated."
+- Do NOT include deadlines, timelines, or "reply if you can't complete" language
+- Do NOT be bossy or demanding
+
+SIGN-OFF:
+- MUST be just: "Best"
+- Do NOT include "thanks for keeping our pipeline accurate" or similar
+- Do NOT include "reach out if you need help" language
+</requirements>
+
+<formatting>
 - Use PLAIN TEXT ONLY - NO markdown formatting
-- Do NOT use asterisks (**), underscores (_), or any markup symbols for bold/italic
+- Do NOT use asterisks (**), underscores (_), or any markup symbols
 - Do NOT use markdown bullets - use plain hyphens (-) for lists
-- The email will be copied directly into an email client, so it must be plain text
+- The email will be copied directly into an email client
 - Make it easy to scan with clear sections and line breaks
+</formatting>
 
-FORMAT THE EMAIL EXACTLY AS:
-Subject: [Your subject line]
+<example>
+Subject: HubSpot Deal Hygiene Report
 
-[Email body with all deals listed]
+Quick health check: We reviewed 25 Sales-pipeline deals (Proposal and Demo stages). Overall completeness is 82%, and there are 7 deals missing 3+ required fields.
+
+Owner: Christopher Garraffa
+- Alpine Springs Addiction Treatment - Robert's Referral (Deal ID: 36660836688)
+  - Missing fields: Next Meeting Start Time, Deal Collaborator, Next Activity Date (EDT)
+
+Owner: Humberto Buniotto
+- Luna (Zinnia) - Robert's Referral (Deal ID: 38678781552)
+  - Missing fields: Next Meeting Start Time, Deal Collaborator, Next Activity Date (EDT)
+
+Most commonly missing fields
+- Next Meeting Start Time: missing in 20 deals (80%)
+- Next Activity Date (EDT): missing in 14 deals (56%)
+
+When you have some time, please make sure these deals are updated.
+
+Best
+</example>
 
 IMPORTANT: Do NOT include any meta-commentary, explanations, or notes - just output the email exactly as it should be sent. List EVERY single deal for EVERY owner - do not abbreviate or summarize.`,
     });
