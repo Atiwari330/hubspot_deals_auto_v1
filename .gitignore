@@ -6,6 +6,9 @@ node_modules/
 .env.local
 .env.*.local
 
+# Credentials and sensitive docs
+docs/credentials_unstructured.md
+
 # Build output
 dist/
 build/
