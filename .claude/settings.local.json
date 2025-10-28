@@ -11,6 +11,7 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git checkout:*)",
+      "Bash(git pull:*)",
       "Bash(npm run discover-properties:*)",
       "Bash(npm run deal-hygiene:*)",
       "WebSearch"
