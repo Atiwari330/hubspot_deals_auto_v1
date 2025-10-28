@@ -1,0 +1,36 @@
+{
+  "name": "hubspot_deals_auto_v1",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "fetch-deals": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "hubspot",
+    "crm",
+    "deals",
+    "ai",
+    "agent"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "HubSpot Deals AI Agent - CLI tool to fetch and analyze HubSpot deals using Vercel AI SDK",
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.56",
+    "ai": "^5.0.81",
+    "dotenv": "^17.2.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
