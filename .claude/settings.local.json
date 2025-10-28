@@ -12,7 +12,8 @@
       "Bash(git commit:*)",
       "Bash(git checkout:*)",
       "Bash(npm run discover-properties:*)",
-      "Bash(npm run deal-hygiene:*)"
+      "Bash(npm run deal-hygiene:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
