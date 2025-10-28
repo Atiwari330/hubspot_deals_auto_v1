@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import { openai } from '@ai-sdk/openai';
+import { generateText } from 'ai';
 import { fetchPipelines, searchDealsByStages, findStageIdsByLabels, fetchOwners } from './hubspot';
 import {
   REQUIRED_PROPERTIES,
@@ -196,6 +198,103 @@ function displayReport(summary: HygieneSummary) {
 }
 
 /**
+ * Generates an AI-powered email report for the team
+ */
+async function generateEmailReport(
+  summary: HygieneSummary,
+  reports: DealHygieneReport[]
+): Promise<string> {
+  // Organize critical deals by owner for better accountability
+  const dealsByOwner = new Map<string, DealHygieneReport[]>();
+
+  summary.criticalDeals.forEach(deal => {
+    const ownerName = deal.dealOwnerName || 'Unassigned';
+    if (!dealsByOwner.has(ownerName)) {
+      dealsByOwner.set(ownerName, []);
+    }
+    dealsByOwner.get(ownerName)!.push(deal);
+  });
+
+  // Prepare data for AI in a structured format
+  const dataForAI = {
+    totalDeals: summary.totalDeals,
+    overallHealth: summary.averageCompleteness,
+    criticalDealsCount: summary.criticalDeals.length,
+    dealsByOwner: Array.from(dealsByOwner.entries()).map(([owner, deals]) => ({
+      owner,
+      dealCount: deals.length,
+      deals: deals.map(deal => ({
+        name: deal.dealName,
+        id: deal.dealId,
+        pipeline: deal.dealPipelineName,
+        stage: deal.dealStageName,
+        completeness: deal.completenessScore,
+        missingFields: deal.missingProperties.map(mp => mp.label),
+      }))
+    })),
+    topMissingProperties: Array.from(summary.propertyMissingCounts.entries())
+      .sort((a, b) => b[1].missingCount - a[1].missingCount)
+      .slice(0, 5)
+      .map(([_, data]) => ({
+        field: data.label,
+        missingCount: data.missingCount,
+        percentage: data.percentage
+      }))
+  };
+
+  console.log('🤖 Generating AI-powered email report...\n');
+
+  try {
+    const { text } = await generateText({
+      model: openai('gpt-4o-mini'),
+      prompt: `You are assisting a VP of Revenue Operations at a software company that sells EHR (Electronic Health Records) systems.
+
+Your task is to create a professional, concise email that the VP can send to their sales team every other day about HubSpot deal hygiene.
+
+CONTEXT:
+- The VP needs to ensure all deals have complete, required information
+- This is a regular reminder email (sent every other day)
+- The team is busy, so keep it actionable and under 500 words
+- Tone should be professional but motivating - you want to drive action without being harsh
+
+DATA SUMMARY:
+- Total deals analyzed: ${dataForAI.totalDeals} (in Proposal and Demo stages)
+- Overall health: ${dataForAI.overallHealth}% complete (average)
+- Critical issues: ${dataForAI.criticalDealsCount} deals missing 3+ required fields
+
+DEALS BY OWNER (Critical Issues Only):
+${JSON.stringify(dataForAI.dealsByOwner, null, 2)}
+
+TOP MISSING FIELDS ACROSS ALL DEALS:
+${JSON.stringify(dataForAI.topMissingProperties, null, 2)}
+
+REQUIREMENTS FOR THE EMAIL:
+1. Start with a clear, action-oriented subject line (include this)
+2. Brief opening (1-2 sentences) about the health check
+3. Organize by deal owner so each person can see their action items
+4. For each owner, list their critical deals with missing fields
+5. Include a summary of the most commonly missing fields
+6. End with a clear call-to-action and timeline
+7. Keep the tone professional but friendly - this is a helpful reminder, not a reprimand
+8. Under 500 words total
+9. Make it easy to scan (use bullets, short paragraphs)
+
+FORMAT THE EMAIL AS:
+Subject: [Your subject line]
+
+[Email body]
+
+Do NOT include any meta-commentary, explanations, or notes - just output the email exactly as it should be sent.`,
+    });
+
+    return text;
+  } catch (error) {
+    console.error('❌ Failed to generate AI email:', error instanceof Error ? error.message : error);
+    return 'Failed to generate email report. Please check your OpenAI API configuration.';
+  }
+}
+
+/**
  * Main function
  */
 async function main() {
@@ -258,6 +357,16 @@ async function main() {
 
     // Display report
     displayReport(summary);
+
+    // Generate AI-powered email report
+    const emailReport = await generateEmailReport(summary, reports);
+
+    // Display copy-pasteable email
+    console.log('\n' + '━'.repeat(80));
+    console.log('📧 EMAIL REPORT (Copy & Paste Below)');
+    console.log('━'.repeat(80));
+    console.log('\n' + emailReport + '\n');
+    console.log('━'.repeat(80));
 
   } catch (error) {
     console.error('\n❌ Error:', error instanceof Error ? error.message : error);
