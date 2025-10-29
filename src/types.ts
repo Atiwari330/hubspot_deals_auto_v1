@@ -47,6 +47,57 @@ export interface HygieneSummary {
   criticalDeals: DealHygieneReport[]; // Missing 3+ properties
 }
 
+/**
+ * Types for Quarterly Forecast
+ */
+
+export interface QuarterInfo {
+  year: number;
+  quarter: number;        // 1, 2, 3, or 4
+  startDate: Date;
+  endDate: Date;
+  label: string;          // e.g., "Q4 2025"
+}
+
+export interface ForecastDeal {
+  dealId: string;
+  dealName: string;
+  dealStage: string;
+  dealStageName: string;
+  dealOwner: string | null;
+  dealOwnerName: string | null;
+  amount: number;         // ARR value
+  closeDate: Date;
+  closeDateString: string; // Formatted date for display
+}
+
+export interface MonthlyForecast {
+  month: string;          // e.g., "October 2025"
+  monthNumber: number;    // 1-12
+  totalARR: number;
+  dealCount: number;
+  deals: ForecastDeal[];
+}
+
+export interface OwnerForecast {
+  ownerId: string | null;
+  ownerName: string | null;
+  totalARR: number;
+  dealCount: number;
+  deals: ForecastDeal[];
+}
+
+export interface ForecastSummary {
+  quarter: QuarterInfo;
+  totalARR: number;
+  totalDeals: number;
+  averageDealSize: number;
+  monthlyBreakdown: MonthlyForecast[];
+  ownerBreakdown: OwnerForecast[];
+  allDeals: ForecastDeal[];
+  skippedDealsCount: number; // Deals missing close date or amount
+}
+
 // The 13 required properties as defined by the user
 export const REQUIRED_PROPERTIES: RequiredProperty[] = [
   { label: 'Next Meeting Start Time', propertyName: 'hs_next_meeting_start_time' },
