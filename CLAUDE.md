@@ -10,6 +10,7 @@ HubSpot Deals Auto v1 is a TypeScript CLI application for automated HubSpot CRM 
 - **Deal Hygiene Monitoring**: Validates 12 required deal properties and calculates completeness scores
 - **Quarterly Sales Forecasting**: Analyzes Proposal-stage deals closing in current quarter to forecast ARR
 - **Weekly Pipeline Forecasting**: Generates weekly board reports with weighted pipeline, active deals, and closed won/lost tracking
+- **Stage Aging Analysis**: Identifies deals stalling in their current stage based on configurable thresholds and activity monitoring
 - **AI-Powered Reporting**: Uses OpenAI GPT-4o-mini to generate automated email reports about missing deal data and revenue forecasts
 
 ## Essential Commands
@@ -19,6 +20,7 @@ npm run fetch-deals        # Fetch and display deals from Proposal/Demo stages
 npm run deal-hygiene       # Check deal data quality and generate AI email report
 npm run forecast           # Generate quarterly sales forecast for Proposal-stage deals
 npm run weekly-forecast    # Generate weekly pipeline forecast for board reporting
+npm run stage-aging        # Analyze deals for stage aging and stalling issues
 npm run discover-properties # Explore available HubSpot deal properties
 npm run all-properties      # List all HubSpot deal properties (internal names)
 npm run custom-properties   # List custom HubSpot deal properties only
@@ -31,6 +33,7 @@ npm start                  # Run compiled application
 - `deal-hygiene`: Critical tool that validates 12 required fields, scores deals (Excellent/Good/Poor), and generates professional email reports organized by owner
 - `forecast`: Analyzes Proposal-stage deals closing in current quarter, calculates total forecasted ARR, and generates AI-powered email with monthly/owner breakdowns
 - `weekly-forecast`: Generates weekly pipeline health dashboard tracking SQL/Demo/Proposal stages with weighted pipeline calculations, closed won/lost metrics, and stage distribution analysis
+- `stage-aging`: Identifies deals that have been in their current stage too long (SQL >10d, Demo >14d, Proposal >7d) or show signs of stalling (no activity 7+ days, past-due close dates). Provides CLI output with stage breakdowns and flagged deals list. Phase 1: CLI only (no AI email generation yet)
 - `discover-properties`: Utility to explore HubSpot's property schema and find internal property names for custom fields
 - `all-properties`: Exports complete list of all deal properties with internal names to properties-list-internal.txt
 - `custom-properties`: Filters and displays only custom properties (excludes HubSpot standard fields)
@@ -39,11 +42,12 @@ npm start                  # Run compiled application
 
 ### Core Modules
 
-**hubspot.ts** - HubSpot API Client Layer (268 lines)
+**hubspot.ts** - HubSpot API Client Layer (308 lines)
 - All HubSpot API communication
-- Key functions: `searchDealsByStages()`, `fetchOwners()`, `findStageIdsByLabels()`
-- Fetches 60+ properties per deal including financial metrics, dates, engagement data
+- Key functions: `searchDealsByStages()`, `fetchOwners()`, `findStageIdsByLabels()`, `resolveStageDateProperty()`
+- Fetches 60+ properties per deal including financial metrics, dates, engagement data, stage entry timestamps
 - Uses parallel fetching for owner enrichment
+- Dynamic stage date property resolution (v2 → legacy fallback)
 
 **index.ts** - Main Deal Fetcher CLI (188 lines)
 - Entry point for `npm run fetch-deals`
@@ -78,11 +82,23 @@ npm start                  # Run compiled application
 - Creates AI-powered board-ready email reports using OpenAI `gpt-4o-mini` model
 - Designed for weekly board meetings with executive summary format
 
-**types.ts** - Type Definitions & Business Rules (200+ lines)
+**stage-aging.ts** - Stage Aging Analyzer (500+ lines)
+- Entry point for `npm run stage-aging`
+- Identifies deals stalling in their current stage (SQL, Demo - Completed, Proposal)
+- Uses dynamic property resolution: `hs_v2_date_entered_*` with legacy `hs_date_entered_*` fallback
+- Stage-specific thresholds: SQL (10 days), Demo - Completed (14 days), Proposal (7 days)
+- Multi-flag detection: aging threshold exceeded, no activity 7+ days, past-due close date
+- Calculates days in stage, median/average metrics per stage
+- CLI output with overall summary, stage breakdowns, and flagged deals table
+- Filters to "Sales" pipeline only (consistent with other scripts)
+- Phase 1: CLI reporting only (no AI email generation yet)
+
+**types.ts** - Type Definitions & Business Rules (240+ lines)
 - Defines `REQUIRED_PROPERTIES`: 12 critical fields for hygiene checking
 - TypeScript interfaces for hygiene reports and summaries
 - TypeScript interfaces for quarterly forecast reports (`QuarterInfo`, `ForecastDeal`, `MonthlyForecast`, `OwnerForecast`, `ForecastSummary`)
 - TypeScript interfaces for weekly forecast reports (`WeeklyForecastMetrics`, `StageForecast`, `WeeklyForecastReport`)
+- TypeScript interfaces for stage aging reports (`StageConfig`, `StageAgingDeal`, `StageBreakdown`, `StageAgingSummary`)
 - Helper: `isPropertyMissing()` - determines if a property value is considered empty
 
 **agent.ts** - Vercel AI SDK Integration (93 lines)
@@ -104,15 +120,15 @@ HubSpot API (hubspot.ts)
     ↓
 Deal Data + Owner Data
     ↓
-┌──────────────┬─────────────────┬──────────────────┬──────────────────┬───────────────────┐
-│              │                 │                  │                  │                   │
-index.ts   deal-hygiene.ts   forecast.ts      weekly-forecast.ts   agent.ts (future)
-│              │                 │                  │                  │
-Display    Validate & Score  Filter by Quarter  Track Active +      AI Queries
-All Deals      ↓                 & Calculate ARR   Closed Deals (Week)
-           OpenAI GPT-4o-mini        ↓                  ↓
-               ↓               OpenAI GPT-4o-mini  OpenAI GPT-4o-mini
-           Email Report            ↓                  ↓
+┌──────────────┬─────────────────┬──────────────────┬──────────────────┬──────────────────┬───────────────────┐
+│              │                 │                  │                  │                  │                   │
+index.ts   deal-hygiene.ts   forecast.ts      weekly-forecast.ts   stage-aging.ts   agent.ts (future)
+│              │                 │                  │                  │                  │
+Display    Validate & Score  Filter by Quarter  Track Active +      Analyze Stage      AI Queries
+All Deals      ↓                 & Calculate ARR   Closed Deals (Week)  Aging & Flags
+           OpenAI GPT-4o-mini        ↓                  ↓                  ↓
+               ↓               OpenAI GPT-4o-mini  OpenAI GPT-4o-mini     CLI Report
+           Email Report            ↓                  ↓               (Phase 2: AI)
                               Email Forecast     Board Email Report
 ```
 
@@ -209,6 +225,47 @@ Q4: October 1 - December 31
 - **Owner Breakdown:** Groups deals by owner, sums ARR per owner
 - **Average Deal Size:** Total ARR ÷ Total Deals in forecast
 
+### Stage Aging Logic
+
+**Property Resolution Strategy:**
+```typescript
+// Dynamic resolution with v2 → legacy fallback
+1. Try hs_v2_date_entered_<stageId> (preferred)
+2. Fallback to hs_date_entered_<stageId> (legacy)
+3. If neither exists, skip deal with warning
+```
+
+**Stage-Specific Thresholds:**
+- SQL (ID: 17915773): >10 days → "Stalled in SQL"
+- Demo - Completed (ID: 963167283): >14 days → "Stalled in Demo"
+- Proposal (ID: 59865091): >7 days → "Stalled in Proposal"
+
+**Multi-Flag Detection:**
+1. **Aging Threshold**: `days_in_stage > stage_threshold`
+2. **No Recent Activity**: `hs_lastmodifieddate` older than 7 days
+3. **Past-Due Close Date**: `closedate < today`
+
+**Calculations:**
+```typescript
+days_in_stage = floor((now - date_entered_stage) / 86400000)
+days_since_modified = floor((now - hs_lastmodifieddate) / 86400000)
+```
+
+**Metrics Per Stage:**
+- Average days in stage (mean)
+- Median days in stage
+- Total deals vs. flagged deals
+- Longest deal in stage
+
+**Pipeline Filtering:**
+- Sales pipeline only (ID: `1c27e5a3-5e5e-4403-ab0f-d356bf268cf3`)
+- Consistent with deal-hygiene and forecast scripts
+
+**Output Format:**
+- Overall summary (totals, flags breakdown)
+- Stage-by-stage breakdown (metrics per stage)
+- Flagged deals table (sorted by days in stage, descending)
+
 ### TypeScript Configuration
 
 - ES Modules (`type: "module"` in package.json)
@@ -236,6 +293,12 @@ Q4: October 1 - December 31
 **For forecast:**
 - Modify `TARGET_STAGE` constant in `src/forecast.ts:18` (currently "proposal")
 - Quarter is auto-detected; to override, modify `getCurrentQuarter()` function
+
+**For stage-aging:**
+- Modify `STAGE_CONFIGS` array in `src/stage-aging.ts:20-40` to add/remove stages or adjust thresholds
+- Update `SALES_PIPELINE_ID` constant if analyzing a different pipeline
+- Adjust `NO_ACTIVITY_THRESHOLD_DAYS` to change the inactivity detection threshold (currently 7 days)
+- When adding new stages, ensure corresponding `hs_v2_date_entered_*` and `hs_date_entered_*` properties are added to `hubspot.ts` property list
 
 ### Add More Properties to Fetch
 
@@ -302,7 +365,9 @@ All workflows use GitHub secrets for API keys and support manual triggering via 
 - The `agent.ts` module is prepared for future Vercel AI SDK integration but not currently used in main workflows
 - Property display names are hardcoded mappings in display functions (not fetched from HubSpot metadata)
 - Deal owner information requires separate API calls, handled efficiently with parallel fetching
-- OpenAI API key is required for `deal-hygiene`, `forecast`, and `weekly-forecast` commands
+- OpenAI API key is required for `deal-hygiene`, `forecast`, and `weekly-forecast` commands (not currently used by `stage-aging`)
 - All AI reports use the `gpt-4o-mini` model for cost-effective, high-quality text generation
 - Forecast assumes the `amount` field already contains ARR - no multiplication or conversion is performed
 - Weekly forecast uses stage weights: SQL (30%), Demo Completed (30%), Proposal (50%), Demo Scheduled (0% - included in totals but not weighted)
+- **Stage aging** is currently in Phase 1: CLI output only. Phase 2 will add AI-powered email generation similar to other reporting scripts
+- Stage aging uses dynamic property resolution to handle both v2 and legacy HubSpot date properties, ensuring compatibility across portal configurations
