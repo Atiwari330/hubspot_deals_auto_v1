@@ -20,6 +20,8 @@ npm run deal-hygiene       # Check deal data quality and generate AI email repor
 npm run forecast           # Generate quarterly sales forecast for Proposal-stage deals
 npm run weekly-forecast    # Generate weekly pipeline forecast for board reporting
 npm run discover-properties # Explore available HubSpot deal properties
+npm run all-properties      # List all HubSpot deal properties (internal names)
+npm run custom-properties   # List custom HubSpot deal properties only
 npm run build              # Compile TypeScript to dist/
 npm start                  # Run compiled application
 ```
@@ -30,6 +32,8 @@ npm start                  # Run compiled application
 - `forecast`: Analyzes Proposal-stage deals closing in current quarter, calculates total forecasted ARR, and generates AI-powered email with monthly/owner breakdowns
 - `weekly-forecast`: Generates weekly pipeline health dashboard tracking SQL/Demo/Proposal stages with weighted pipeline calculations, closed won/lost metrics, and stage distribution analysis
 - `discover-properties`: Utility to explore HubSpot's property schema and find internal property names for custom fields
+- `all-properties`: Exports complete list of all deal properties with internal names to properties-list-internal.txt
+- `custom-properties`: Filters and displays only custom properties (excludes HubSpot standard fields)
 
 ## High-Level Architecture
 
@@ -66,9 +70,9 @@ npm start                  # Run compiled application
 
 **weekly-forecast.ts** - Weekly Pipeline Forecast Generator (600+ lines)
 - Entry point for `npm run weekly-forecast`
-- Analyzes deals in "SQL", "Demo Completed", and "Proposal" stages from Sales pipeline
+- Analyzes deals in SQL, Demo Scheduled, Demo Completed, and Proposal stages from Sales pipeline
 - Week definition: Monday-Sunday (reports "Week Ending" on Sunday)
-- Calculates weighted pipeline using stage-specific probability weights (SQL: 30%, Demo: 30%, Proposal: 50%)
+- Calculates weighted pipeline using stage-specific probability weights (SQL: 30%, Demo Completed: 30%, Proposal: 50%, Demo Scheduled: 0%)
 - Tracks closed won and closed lost deals from current week using `hs_date_entered_closedwon` and `hs_date_entered_closedlost`
 - Generates stage breakdown with deal counts, pipeline amounts, weighted amounts, and percentages
 - Creates AI-powered board-ready email reports using OpenAI `gpt-4o-mini` model
@@ -162,7 +166,7 @@ Defined in `src/types.ts` as `REQUIRED_PROPERTIES`:
 
 ### AI Email Generation
 
-- Model: `gpt-4.5-mini` via OpenAI API
+- Model: `gpt-4o-mini` via OpenAI API
 - Prompt engineering in `deal-hygiene.ts:generateEmailReport()` (lines 90-179)
 - Strict formatting: plain text, no markdown, organized by owner
 - AI generates professional tone with specific instructions for revenue ops context
@@ -174,7 +178,7 @@ completeness = (filledProperties / totalRequired) * 100
 - Excellent: 90-100%
 - Good: 70-89%
 - Poor: <70%
-- Critical: Missing 3+ properties
+- Issues: Missing 1+ properties (all deals with any missing fields are flagged)
 ```
 
 ### Forecasting Logic
@@ -301,4 +305,4 @@ All workflows use GitHub secrets for API keys and support manual triggering via 
 - OpenAI API key is required for `deal-hygiene`, `forecast`, and `weekly-forecast` commands
 - All AI reports use the `gpt-4o-mini` model for cost-effective, high-quality text generation
 - Forecast assumes the `amount` field already contains ARR - no multiplication or conversion is performed
-- Weekly forecast uses industry-standard stage weights: SQL (30%), Demo Completed (30%), Proposal (50%)
+- Weekly forecast uses stage weights: SQL (30%), Demo Completed (30%), Proposal (50%), Demo Scheduled (0% - included in totals but not weighted)

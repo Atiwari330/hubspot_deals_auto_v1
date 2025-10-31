@@ -14,7 +14,12 @@
       "Bash(git pull:*)",
       "Bash(npm run discover-properties:*)",
       "Bash(npm run deal-hygiene:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:forecastio.ai)",
+      "WebFetch(domain:www.mosaic.tech)",
+      "WebFetch(domain:www.drivetrain.ai)",
+      "Bash(npm run all-properties:*)",
+      "Bash(git rev-parse:*)"
     ],
     "deny": [],
     "ask": []
