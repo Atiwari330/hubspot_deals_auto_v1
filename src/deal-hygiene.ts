@@ -53,6 +53,14 @@ function analyzeDeal(
   const owner = props.hubspot_owner_id ? ownersMap.get(props.hubspot_owner_id) : null;
   const dealOwnerName = owner ? `${owner.firstName} ${owner.lastName}` : null;
 
+  // Parse and check close date
+  const closeDate = props.closedate ? new Date(props.closedate) : null;
+  const closeDateString = closeDate
+    ? closeDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+    : null;
+  const now = new Date();
+  const isCloseDatePastDue = closeDate ? closeDate < now : false;
+
   return {
     dealId: deal.id,
     dealName: props.dealname || 'Unnamed Deal',
@@ -68,6 +76,9 @@ function analyzeDeal(
     totalRequired: totalRequired,
     totalPresent: totalPresent,
     totalMissing: missingProperties.length,
+    closeDate: closeDate,
+    closeDateString: closeDateString,
+    isCloseDatePastDue: isCloseDatePastDue,
   };
 }
 
@@ -104,6 +115,10 @@ function createSummary(reports: DealHygieneReport[]): HygieneSummary {
   // Identify deals with any issues (missing 1+ properties)
   const dealsWithIssues = reports.filter(r => r.totalMissing >= 1);
 
+  // Identify deals with past-due close dates
+  const dealsWithPastDueCloseDates = reports.filter(r => r.isCloseDatePastDue);
+  const pastDueCount = dealsWithPastDueCloseDates.length;
+
   return {
     totalDeals: reports.length,
     averageCompleteness: averageCompleteness,
@@ -114,6 +129,8 @@ function createSummary(reports: DealHygieneReport[]): HygieneSummary {
       poor: poor,
     },
     dealsWithIssues: dealsWithIssues,
+    dealsWithPastDueCloseDates: dealsWithPastDueCloseDates,
+    pastDueCount: pastDueCount,
   };
 }
 
@@ -126,7 +143,11 @@ function displayReport(summary: HygieneSummary) {
   console.log('━'.repeat(80));
 
   console.log(`\n📊 Analyzed: ${summary.totalDeals} deal(s) in Sales pipeline ("Proposal" and "Demo - Completed" stages)`);
-  console.log(`📈 Overall Health: ${summary.averageCompleteness}% complete (average)\n`);
+  console.log(`📈 Overall Health: ${summary.averageCompleteness}% complete (average)`);
+  if (summary.pastDueCount > 0) {
+    console.log(`🚨 Past-Due Close Dates: ${summary.pastDueCount} deal(s) with close date in the past`);
+  }
+  console.log('');
 
   // Deals with issues section
   if (summary.dealsWithIssues.length > 0) {
@@ -141,6 +162,9 @@ function displayReport(summary: HygieneSummary) {
         console.log(`   👤 Owner: ${deal.dealOwnerName}`);
       }
       console.log(`   ❌ Missing: ${deal.missingProperties.map(mp => mp.label).join(', ')}`);
+      if (deal.isCloseDatePastDue && deal.closeDateString) {
+        console.log(`   🚨 Close Date Past Due: ${deal.closeDateString}`);
+      }
       console.log(`   📉 Completeness: ${deal.completenessScore}% (${deal.totalPresent}/${deal.totalRequired} properties)\n`);
     });
   } else {
@@ -177,7 +201,23 @@ function displayReport(summary: HygieneSummary) {
     });
   }
 
-  console.log('\n' + '━'.repeat(80));
+  // Show deals with past-due close dates
+  if (summary.pastDueCount > 0) {
+    console.log('\n' + '━'.repeat(80));
+    console.log(`🚨 DEALS WITH PAST-DUE CLOSE DATES (${summary.pastDueCount} deal(s)):\n`);
+
+    summary.dealsWithPastDueCloseDates.forEach((deal, index) => {
+      const missingInfo = deal.totalMissing > 0
+        ? ` | Missing ${deal.totalMissing} field(s)`
+        : ' | All fields complete';
+      console.log(`   ${index + 1}. "${deal.dealName}" [ID: ${deal.dealId}]`);
+      console.log(`      Close Date: ${deal.closeDateString} (PAST DUE)`);
+      console.log(`      Owner: ${deal.dealOwnerName || 'Unassigned'} | Stage: ${deal.dealStageName}${missingInfo}`);
+      console.log('');
+    });
+  }
+
+  console.log('━'.repeat(80));
   console.log('\n💡 RECOMMENDATIONS:\n');
 
   // Provide actionable recommendations
@@ -205,9 +245,15 @@ async function generateEmailReport(
   reports: DealHygieneReport[]
 ): Promise<string> {
   // Organize deals with issues by owner for better accountability
+  // Include deals with missing fields OR past-due close dates
   const dealsByOwner = new Map<string, DealHygieneReport[]>();
 
-  summary.dealsWithIssues.forEach(deal => {
+  // Combine both types of issues into a single set (avoiding duplicates)
+  const dealsToReport = new Set<DealHygieneReport>();
+  summary.dealsWithIssues.forEach(deal => dealsToReport.add(deal));
+  summary.dealsWithPastDueCloseDates.forEach(deal => dealsToReport.add(deal));
+
+  dealsToReport.forEach(deal => {
     const ownerName = deal.dealOwnerName || 'Unassigned';
     if (!dealsByOwner.has(ownerName)) {
       dealsByOwner.set(ownerName, []);
@@ -220,6 +266,7 @@ async function generateEmailReport(
     totalDeals: summary.totalDeals,
     overallHealth: summary.averageCompleteness,
     dealsWithIssuesCount: summary.dealsWithIssues.length,
+    pastDueCount: summary.pastDueCount,
     dealsByOwner: Array.from(dealsByOwner.entries()).map(([owner, deals]) => ({
       owner,
       dealCount: deals.length,
@@ -230,6 +277,8 @@ async function generateEmailReport(
         stage: deal.dealStageName,
         completeness: deal.completenessScore,
         missingFields: deal.missingProperties.map(mp => mp.label),
+        isCloseDatePastDue: deal.isCloseDatePastDue,
+        closeDateString: deal.closeDateString,
       }))
     })),
     topMissingProperties: Array.from(summary.propertyMissingCounts.entries())
@@ -262,8 +311,9 @@ Your task is to create a professional email that the VP can send to their sales 
 Total deals analyzed: ${dataForAI.totalDeals} (Sales pipeline only - Proposal and Demo stages)
 Overall health: ${dataForAI.overallHealth}% complete (average)
 Deals with issues: ${dataForAI.dealsWithIssuesCount} deals missing 1+ required fields
+Deals with past-due close dates: ${dataForAI.pastDueCount} deal(s)
 
-Deals by owner (all deals with missing fields):
+Deals by owner (includes ALL deals with missing fields OR past-due close dates):
 ${JSON.stringify(dataForAI.dealsByOwner, null, 2)}
 
 Top missing fields across all deals:
@@ -278,11 +328,16 @@ SUBJECT LINE:
 OPENING:
 - Start with "Quick health check:" followed by 1-2 sentences about the stats
 - Include total deals, pipeline name, overall health percentage, and number of deals with missing fields
+- MUST also mention if there are any deals with past-due close dates (${dataForAI.pastDueCount} deals)
 
 BODY - DEALS BY OWNER:
 - Organize by owner name
 - YOU MUST LIST EVERY SINGLE DEAL - Do NOT summarize, truncate, or use phrases like "other deals" or "listed similarly"
 - For each deal show: deal name (with Deal ID if available) and specific missing fields
+- CRITICAL: For EVERY deal where isCloseDatePastDue is true, you MUST show a separate line immediately after the missing fields line:
+  "  - Close Date Past Due: [closeDateString]"
+- This is NOT optional - if a deal has isCloseDatePastDue: true, you MUST include the "Close Date Past Due" line
+- Even if a deal has NO missing fields, if isCloseDatePastDue is true, you MUST still list that deal under its owner with the past-due close date
 - Use plain hyphens (-) for lists
 
 BODY - MISSING FIELDS SUMMARY:
@@ -311,15 +366,19 @@ SIGN-OFF:
 <example>
 Subject: HubSpot Deal Hygiene Report
 
-Quick health check: We reviewed 25 Sales-pipeline deals (Proposal and Demo stages). Overall completeness is 82%, and there are 7 deals missing required fields.
+Quick health check: We reviewed 25 Sales-pipeline deals (Proposal and Demo stages). Overall completeness is 82%, and there are 7 deals missing required fields. 3 deals have past-due close dates.
 
 Owner: Christopher Garraffa
 - Alpine Springs Addiction Treatment - Robert's Referral (Deal ID: 36660836688)
   - Missing fields: Deal Collaborator, Next Activity Date (EDT), Next Step
+  - Close Date Past Due: Oct 15, 2024
 
 Owner: Humberto Buniotto
 - Luna (Zinnia) - Robert's Referral (Deal ID: 38678781552)
   - Missing fields: Deal Collaborator, Next Activity Date (EDT), Prior EHR
+- Wellness Center XYZ (Deal ID: 38888888888)
+  - Missing fields: None
+  - Close Date Past Due: Sep 30, 2024
 
 Most commonly missing fields
 - Deal Collaborator: missing in 18 deals (72%)
