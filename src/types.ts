@@ -181,3 +181,60 @@ export interface WeeklyForecastReport {
   totalActive: number;       // Same as totalPipeline
   totalWeighted: number;     // Same as weightedPipeline
 }
+
+/**
+ * Types for Stage Aging Analysis
+ */
+
+export interface StageConfig {
+  stageId: string;           // Internal HubSpot stage ID
+  stageName: string;         // Readable stage name
+  thresholdDays: number;     // Days before flagging as stalled
+  flagReason: string;        // Message to show when flagged (e.g., "Stalled in SQL")
+}
+
+export interface StageAgingDeal {
+  dealId: string;
+  dealName: string;
+  dealStage: string;         // Stage ID
+  dealStageName: string;     // Readable stage name
+  pipeline: string;          // Pipeline ID
+  pipelineName: string;      // Readable pipeline name
+  dealOwner: string | null;
+  dealOwnerName: string | null;
+  amount: number | null;
+  closeDate: Date | null;
+  closeDateString: string | null;
+  dateEnteredStage: Date;    // When deal entered current stage
+  dateEnteredStageString: string; // Formatted date for display
+  daysInStage: number;       // Days since entering current stage
+  lastModifiedDate: Date | null;  // Last time any property changed
+  daysSinceModified: number | null; // Days since last modification
+  flagReasons: string[];     // Reasons for flagging (aging, no activity, past due)
+  thresholdDays: number;     // Stage-specific threshold
+  datePropertyUsed: string;  // Which property was used (for debugging)
+}
+
+export interface StageBreakdown {
+  stageName: string;
+  stageId: string;
+  thresholdDays: number;
+  totalDeals: number;
+  flaggedDeals: number;      // Deals exceeding threshold
+  averageDaysInStage: number;
+  medianDaysInStage: number;
+  longestDeal: StageAgingDeal | null;
+  flaggedDealsList: StageAgingDeal[];
+}
+
+export interface StageAgingSummary {
+  totalDeals: number;
+  totalFlagged: number;      // Deals with any flag reason
+  staleDeals: number;        // Deals exceeding stage threshold
+  noActivityDeals: number;   // Deals with no activity in 7+ days
+  pastDueDeals: number;      // Deals with close date in past
+  stageBreakdowns: StageBreakdown[];
+  overallAverageDays: number;
+  overallMedianDays: number;
+  allDeals: StageAgingDeal[];
+}

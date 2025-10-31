@@ -112,6 +112,16 @@ export async function searchDealsByStages(
       'hs_date_entered_closedwon',
       'hs_date_entered_closedlost',
 
+      // Stage Aging Properties (Sales Pipeline)
+      'hs_v2_date_entered_17915773',        // SQL - v2
+      'hs_date_entered_17915773',           // SQL - legacy
+      'hs_v2_date_entered_963167283',       // Demo - Completed - v2
+      'hs_date_entered_963167283',          // Demo - Completed - legacy
+      'hs_v2_date_entered_59865091',        // Proposal - v2
+      'hs_date_entered_59865091',           // Proposal - legacy
+      'hs_v2_date_entered_baedc188-ba76-4a41-8723-5bb99fe7c5bf',  // Demo - Scheduled - v2
+      'hs_date_entered_baedc188-ba76-4a41-8723-5bb99fe7c5bf',     // Demo - Scheduled - legacy
+
       // Owner & Team
       'hubspot_owner_id',
       'hubspot_team_id',
@@ -264,4 +274,34 @@ export async function fetchOwners(
   });
 
   return ownerMap;
+}
+
+/**
+ * Helper to determine which date-entered property exists for a given stage
+ * Tries v2 first, then legacy
+ */
+export function resolveStageDateProperty(
+  deal: Deal,
+  stageId: string
+): { property: string; value: string | null } | null {
+  // Try v2 first (preferred)
+  const v2Property = `hs_v2_date_entered_${stageId}`;
+  if (deal.properties[v2Property]) {
+    return {
+      property: v2Property,
+      value: deal.properties[v2Property],
+    };
+  }
+
+  // Try legacy
+  const legacyProperty = `hs_date_entered_${stageId}`;
+  if (deal.properties[legacyProperty]) {
+    return {
+      property: legacyProperty,
+      value: deal.properties[legacyProperty],
+    };
+  }
+
+  // No property found
+  return null;
 }
