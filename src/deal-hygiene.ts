@@ -101,8 +101,8 @@ function createSummary(reports: DealHygieneReport[]): HygieneSummary {
   const good = reports.filter(r => r.completenessScore >= 70 && r.completenessScore < 90);
   const poor = reports.filter(r => r.completenessScore < 70);
 
-  // Identify critical deals (missing 3+ properties)
-  const criticalDeals = reports.filter(r => r.totalMissing >= 3);
+  // Identify deals with any issues (missing 1+ properties)
+  const dealsWithIssues = reports.filter(r => r.totalMissing >= 1);
 
   return {
     totalDeals: reports.length,
@@ -113,7 +113,7 @@ function createSummary(reports: DealHygieneReport[]): HygieneSummary {
       good: good,
       poor: poor,
     },
-    criticalDeals: criticalDeals,
+    dealsWithIssues: dealsWithIssues,
   };
 }
 
@@ -128,12 +128,12 @@ function displayReport(summary: HygieneSummary) {
   console.log(`\n📊 Analyzed: ${summary.totalDeals} deal(s) in Sales pipeline ("Proposal" and "Demo - Completed" stages)`);
   console.log(`📈 Overall Health: ${summary.averageCompleteness}% complete (average)\n`);
 
-  // Critical issues section
-  if (summary.criticalDeals.length > 0) {
+  // Deals with issues section
+  if (summary.dealsWithIssues.length > 0) {
     console.log('━'.repeat(80));
-    console.log(`🚨 CRITICAL ISSUES (${summary.criticalDeals.length} deals missing 3+ required properties):\n`);
+    console.log(`🚨 DEALS WITH ISSUES (${summary.dealsWithIssues.length} deals missing 1+ required properties):\n`);
 
-    summary.criticalDeals.forEach((deal, index) => {
+    summary.dealsWithIssues.forEach((deal, index) => {
       console.log(`${index + 1}. Deal: "${deal.dealName}" [ID: ${deal.dealId}]`);
       console.log(`   📊 Pipeline: ${deal.dealPipelineName}`);
       console.log(`   🎯 Stage: ${deal.dealStageName}`);
@@ -145,7 +145,7 @@ function displayReport(summary: HygieneSummary) {
     });
   } else {
     console.log('━'.repeat(80));
-    console.log('✅ NO CRITICAL ISSUES - No deals are missing 3 or more properties\n');
+    console.log('✅ NO ISSUES - All deals have complete required properties\n');
   }
 
   // Summary by missing property
@@ -186,8 +186,8 @@ function displayReport(summary: HygieneSummary) {
     console.log(`   1. Priority: Update "${topMissingProperty[1].label}" - missing from ${topMissingProperty[1].missingCount} deal(s)`);
   }
 
-  if (summary.criticalDeals.length > 0) {
-    console.log(`   2. Focus on ${summary.criticalDeals.length} critical deal(s) with 3+ missing properties`);
+  if (summary.dealsWithIssues.length > 0) {
+    console.log(`   2. Focus on ${summary.dealsWithIssues.length} deal(s) with missing properties`);
   }
 
   if (summary.dealsByCompleteness.poor.length > 0) {
@@ -204,10 +204,10 @@ async function generateEmailReport(
   summary: HygieneSummary,
   reports: DealHygieneReport[]
 ): Promise<string> {
-  // Organize critical deals by owner for better accountability
+  // Organize deals with issues by owner for better accountability
   const dealsByOwner = new Map<string, DealHygieneReport[]>();
 
-  summary.criticalDeals.forEach(deal => {
+  summary.dealsWithIssues.forEach(deal => {
     const ownerName = deal.dealOwnerName || 'Unassigned';
     if (!dealsByOwner.has(ownerName)) {
       dealsByOwner.set(ownerName, []);
@@ -219,7 +219,7 @@ async function generateEmailReport(
   const dataForAI = {
     totalDeals: summary.totalDeals,
     overallHealth: summary.averageCompleteness,
-    criticalDealsCount: summary.criticalDeals.length,
+    dealsWithIssuesCount: summary.dealsWithIssues.length,
     dealsByOwner: Array.from(dealsByOwner.entries()).map(([owner, deals]) => ({
       owner,
       dealCount: deals.length,
@@ -261,9 +261,9 @@ Your task is to create a professional email that the VP can send to their sales 
 <data>
 Total deals analyzed: ${dataForAI.totalDeals} (Sales pipeline only - Proposal and Demo stages)
 Overall health: ${dataForAI.overallHealth}% complete (average)
-Critical issues: ${dataForAI.criticalDealsCount} deals missing 3+ required fields
+Deals with issues: ${dataForAI.dealsWithIssuesCount} deals missing 1+ required fields
 
-Deals by owner (critical issues only):
+Deals by owner (all deals with missing fields):
 ${JSON.stringify(dataForAI.dealsByOwner, null, 2)}
 
 Top missing fields across all deals:
@@ -277,7 +277,7 @@ SUBJECT LINE:
 
 OPENING:
 - Start with "Quick health check:" followed by 1-2 sentences about the stats
-- Include total deals, pipeline name, overall health percentage, and number of critical deals
+- Include total deals, pipeline name, overall health percentage, and number of deals with missing fields
 
 BODY - DEALS BY OWNER:
 - Organize by owner name
@@ -311,18 +311,18 @@ SIGN-OFF:
 <example>
 Subject: HubSpot Deal Hygiene Report
 
-Quick health check: We reviewed 25 Sales-pipeline deals (Proposal and Demo stages). Overall completeness is 82%, and there are 7 deals missing 3+ required fields.
+Quick health check: We reviewed 25 Sales-pipeline deals (Proposal and Demo stages). Overall completeness is 82%, and there are 7 deals missing required fields.
 
 Owner: Christopher Garraffa
 - Alpine Springs Addiction Treatment - Robert's Referral (Deal ID: 36660836688)
-  - Missing fields: Next Meeting Start Time, Deal Collaborator, Next Activity Date (EDT)
+  - Missing fields: Deal Collaborator, Next Activity Date (EDT), Next Step
 
 Owner: Humberto Buniotto
 - Luna (Zinnia) - Robert's Referral (Deal ID: 38678781552)
-  - Missing fields: Next Meeting Start Time, Deal Collaborator, Next Activity Date (EDT)
+  - Missing fields: Deal Collaborator, Next Activity Date (EDT), Prior EHR
 
 Most commonly missing fields
-- Next Meeting Start Time: missing in 20 deals (80%)
+- Deal Collaborator: missing in 18 deals (72%)
 - Next Activity Date (EDT): missing in 14 deals (56%)
 
 When you have some time, please make sure these deals are updated.

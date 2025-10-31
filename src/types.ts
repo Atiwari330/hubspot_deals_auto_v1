@@ -44,7 +44,7 @@ export interface HygieneSummary {
     good: DealHygieneReport[];       // 70-89%
     poor: DealHygieneReport[];       // Below 70%
   };
-  criticalDeals: DealHygieneReport[]; // Missing 3+ properties
+  dealsWithIssues: DealHygieneReport[]; // Missing 1+ properties
 }
 
 /**
@@ -98,9 +98,8 @@ export interface ForecastSummary {
   skippedDealsCount: number; // Deals missing close date or amount
 }
 
-// The 13 required properties as defined by the user
+// The 12 required properties as defined by the user
 export const REQUIRED_PROPERTIES: RequiredProperty[] = [
-  { label: 'Next Meeting Start Time', propertyName: 'hs_next_meeting_start_time' },
   { label: 'Product/s', propertyName: 'product_s' },
   { label: 'Prior EHR', propertyName: 'prior_ehr' },
   { label: 'Deal Collaborator', propertyName: 'hs_all_collaborator_owner_ids' },
@@ -122,17 +121,16 @@ export const REQUIRED_PROPERTIES: RequiredProperty[] = [
  * - undefined
  * - empty string
  * - empty array
- *
- * Exception: Amount of 0 is considered valid (not missing)
+ * - zero (for amount field)
  */
 export function isPropertyMissing(propertyName: string, value: any): boolean {
-  // Special case: Amount of 0 is valid
-  if (propertyName === 'amount' && value === 0) {
-    return false;
-  }
-
   // Check for null, undefined, empty string
   if (value === null || value === undefined || value === '') {
+    return true;
+  }
+
+  // Check for zero amount (considered missing)
+  if (propertyName === 'amount' && value === 0) {
     return true;
   }
 
@@ -148,4 +146,38 @@ export function isPropertyMissing(propertyName: string, value: any): boolean {
 
   // Property is present
   return false;
+}
+
+/**
+ * Types for Weekly Pipeline Forecast
+ */
+
+export interface WeeklyForecastMetrics {
+  weekEnding: Date;          // Sunday end date of the week
+  totalPipeline: number;     // Sum of all active deals in SQL + Demo + Proposal
+  weightedPipeline: number;  // Probability-adjusted pipeline value
+  closedWon: {
+    count: number;
+    amount: number;
+  };
+  closedLost: {
+    count: number;
+    amount: number;
+  };
+}
+
+export interface StageForecast {
+  stageName: string;         // Readable name (SQL, Demo Completed, Proposal)
+  dealCount: number;         // Number of deals in this stage
+  pipelineAmount: number;    // Total ARR in this stage
+  weightedAmount: number;    // pipelineAmount × stageWeight
+  stageWeight: number;       // Probability weight (0.30, 0.30, 0.50)
+  percentageOfTotal: number; // % of total active pipeline
+}
+
+export interface WeeklyForecastReport {
+  metrics: WeeklyForecastMetrics;
+  stageBreakdown: StageForecast[];
+  totalActive: number;       // Same as totalPipeline
+  totalWeighted: number;     // Same as weightedPipeline
 }

@@ -1,0 +1,1208 @@
+
+> hubspot_deals_auto_v1@1.0.0 custom-properties
+> tsx src/custom-properties.ts
+
+
+🔧 CUSTOM DEAL PROPERTIES (Created by Your Organization)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Fetching custom properties from HubSpot API...
+
+✅ Found 164 custom properties out of 716 total properties
+
+📊 Custom Property Statistics:
+   • Total Custom Properties: 164
+   • Calculated/Formula Fields: 28
+   • Hidden Properties: 4
+   • Dropdown/Select Fields: 39
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 ARROWS_PROPERTIES (39 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. Arrows current phase name
+   ├─ Internal Name: arrows_current_phase_name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The current active phase on the plan. This is automatically updated by Arrows.
+   └─
+
+2. Arrows current task assignee
+   ├─ Internal Name: arrows_current_task_assignee
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the person assigned to the current task. This is automatically updat...
+   └─
+
+3. Arrows current task assignee email
+   ├─ Internal Name: arrows_current_task_assignee_email
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The email address of the person assigned to the current task. This is automatica...
+   └─
+
+4. Arrows current task description
+   ├─ Internal Name: arrows_current_task_description
+   ├─ Type: string
+   ├─ Field Type: textarea
+   ├─ Description: The description of the current task. This is automatically updated by Arrows.
+   └─
+
+5. Arrows current task due date
+   ├─ Internal Name: arrows_current_task_due_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The due date of the current task. This is automatically updated by Arrows.
+   └─
+
+6. Arrows current task name
+   ├─ Internal Name: arrows_current_task_name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The current active task on the plan. This is automatically updated by Arrows.
+   └─
+
+7. Arrows current task URL
+   ├─ Internal Name: arrows_current_task_url
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The URL of the current task. This is automatically updated by Arrows.
+   └─
+
+8. Arrows days on current phase
+   ├─ Internal Name: arrows_days_on_current_phase
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The number of days the current phase has been active. This is automatically upda...
+   └─
+
+9. Arrows days on current task
+   ├─ Internal Name: arrows_days_on_task
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The number of days the current task has been active. This is automatically updat...
+   └─
+
+10. Arrows days since plan started
+   ├─ Internal Name: arrows_days_since_start_date
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The number of days since the plan start date. This is automatically updated by A...
+   └─
+
+11. Arrows days until target date
+   ├─ Internal Name: arrows_days_to_target_date
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The number of days until the target completion date. This is automatically updat...
+   └─
+
+12. Arrows elapsed time percentage
+   ├─ Internal Name: arrows_elapsed_time_percentage
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The percentage of elapsed time from the plan start date to the target date. This...
+   └─
+
+13. Arrows most recent task completed
+   ├─ Internal Name: arrows_most_recent_task_completed_name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the most recently completed task. This is automatically updated by A...
+   └─
+
+14. Arrows most recent task completion date
+   ├─ Internal Name: arrows_most_recent_task_completed_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The most recent date a task was completed. This is automatically updated by Arro...
+   └─
+
+15. Arrows next coordinator task
+   ├─ Internal Name: arrows_next_coordinator_task
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the next task assigned to the coordinator. This is automatically upd...
+   └─
+
+16. Arrows next coordinator task due date
+   ├─ Internal Name: arrows_next_coordinator_task_due_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The due date of the next task assigned to the coordinator. This is automatically...
+   └─
+
+17. Arrows next participant task
+   ├─ Internal Name: arrows_next_participant_task
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the next task assigned to a participant. This is automatically updat...
+   └─
+
+18. Arrows next participant task assignee email
+   ├─ Internal Name: arrows_next_participant_task_assignee_email
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The email of the assignee of the next task assigned to a participant. This is au...
+   └─
+
+19. Arrows next participant task assignee name
+   ├─ Internal Name: arrows_next_participant_task_assignee_name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the assignee of the next task assigned to a participant. This is aut...
+   └─
+
+20. Arrows next participant task due date
+   ├─ Internal Name: arrows_next_participant_task_due_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The due date of the next task assigned to a participant. This is automatically u...
+   └─
+
+21. Arrows next unassigned task
+   ├─ Internal Name: arrows_next_unassigned_task
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the next unassigned task. This is automatically updated by Arrows.
+   └─
+
+22. Arrows next unassigned task due date
+   ├─ Internal Name: arrows_next_unassigned_task_due_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The due date of the next unassigned task. This is automatically updated by Arrow...
+   └─
+
+23. Arrows number of optional tasks
+   ├─ Internal Name: arrows_number_of_optional_tasks
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The total number of optional tasks in the plan. This is automatically updated by...
+   └─
+
+24. Arrows number of skipped tasks
+   ├─ Internal Name: arrows_number_of_skipped_tasks
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The total number of skipped tasks in the plan. This is automatically updated by ...
+   └─
+
+25. Arrows overdue tasks
+   ├─ Internal Name: arrows_overdue_tasks
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The total number of tasks with due dates that are past due. This is automaticall...
+   └─
+
+26. Arrows participant last viewed
+   ├─ Internal Name: arrows_participant_last_viewed
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The date any participant last viewed the plan. This is automatically updated by ...
+   └─
+
+27. Arrows participant progress blocked
+   ├─ Internal Name: arrows_participant_progress_blocked
+   ├─ Type: bool
+   ├─ Field Type: booleancheckbox
+   ├─ Description: If there are no tasks available for participants to complete. This is automatica...
+   └─ Options: True, False
+
+28. Arrows plan finished date
+   ├─ Internal Name: arrows_finished_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The date when the plan was marked as completed, failed, or archived. This is aut...
+   └─
+
+29. Arrows plan link
+   ├─ Internal Name: arrows_plan_hyperlink
+   ├─ Type: string
+   ├─ Field Type: html
+   ├─ Description: A rich-text link to this plan that can be used in emails or snippets. This is au...
+   └─
+
+30. Arrows plan name
+   ├─ Internal Name: arrows_plan_name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the Arrows plan. This is automatically updated by Arrows.
+   └─
+
+31. Arrows plan start date
+   ├─ Internal Name: arrows_start_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The start date set on the plan. This is automatically updated by Arrows.
+   └─
+
+32. Arrows plan status
+   ├─ Internal Name: arrows_plan_status
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The current status of the plan. This is automatically updated by Arrows.
+   └─
+
+33. Arrows plan summary
+   ├─ Internal Name: arrows_plan_summary
+   ├─ Type: string
+   ├─ Field Type: textarea
+   ├─ Description: A summary of recent activity on your Arrows plan. This is automatically updated ...
+   └─
+
+34. Arrows plan target date
+   ├─ Internal Name: arrows_target_date
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The target completion date set on the plan. This is automatically updated by Arr...
+   └─
+
+35. Arrows plan URL
+   ├─ Internal Name: arrows_plan_url
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The URL for this plan. This is automatically updated by Arrows.
+   └─
+
+36. Arrows point person last viewed
+   ├─ Internal Name: arrows_point_person_last_viewed
+   ├─ Type: date
+   ├─ Field Type: date
+   ├─ Description: The date the point person last viewed the plan. This is automatically updated by...
+   └─
+
+37. Arrows task completion percentage
+   ├─ Internal Name: arrows_task_completion_percentage
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The percentage of completed tasks versus total tasks in the plan. This is automa...
+   └─
+
+38. Arrows template name
+   ├─ Internal Name: arrows_template_name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The name of the template used to create the plan. This is automatically updated ...
+   └─
+
+39. Arrows views by participants
+   ├─ Internal Name: arrows_total_participant_views
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The total number of times participants have viewed the plan. This is automatical...
+   └─
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 CUSTOM_CALCULATED_DEAL_INFORMATION (11 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. ARR 🧮
+   ├─ Internal Name: arr
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+2. CLTV
+   ├─ Internal Name: lifetime_deal_value
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: Contract Value
+   └─
+
+3. Contract End Date
+   ├─ Internal Name: contract_end_date
+   ├─ Type: date
+   ├─ Field Type: date
+   └─
+
+4. Contract Start Date
+   ├─ Internal Name: contract_start_date
+   ├─ Type: date
+   ├─ Field Type: date
+   └─
+
+5. Contract Term (Months)
+   ├─ Internal Name: contract_term__calulcation_
+   ├─ Type: number
+   ├─ Field Type: number
+   └─
+
+6. MRR 🧮
+   ├─ Internal Name: mrr
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+7. Time Between "Demo Completed" and "Closed" 🧮
+   ├─ Internal Name: time_between__demo_completed__and__closed_lost_
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+8. Time Spend Between Pipeline Stage Configuration to Hypercare 🧮
+   ├─ Internal Name: time_spend_between_pipeline_stage_configuration_to_hypercare
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Description: Time Spend Between Onboarding Pipeline Stage Initial Setup to Hypercare
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+9. Time Spend Between Pipeline Stage Initial Setup to Hypercare 🧮
+   ├─ Internal Name: time_spend_between_pipeline_stage_initial_setup_to_hypercare
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Description: Time Spend Between Onboarding Pipeline Stage Initial Setup to Hypercare
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+10. Time Spend Between Pipeline Stage Initial Setup to Live 🧮
+   ├─ Internal Name: time_spend_between_pipeline_stage_initial_setup_to_live
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Description: Time Spend Between Pipeline Stage Initial Setup to Live
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+11. Time Spend Between Pipeline Stage System Check to Hypercare 🧮
+   ├─ Internal Name: time_spend_between_pipeline_stage_system_check_to_hypercare
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Description: Time Spend Between Onboarding Pipeline Stage Initial Setup to Hypercare
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 DEAL_ACTIVITY (25 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. [ON] - CRM Admission
+   ├─ Internal Name: on____crm_admission
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+2. [ON] - CRM Referrals
+   ├─ Internal Name: on____crm_referrals
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+3. [ON] - Group Note Created
+   ├─ Internal Name: on____group_note_created
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+4. [ON] - Group Note Created (Real Patient)
+   ├─ Internal Name: on____group_note_created__real_patient_
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+5. [ON] - Individual Note Created
+   ├─ Internal Name: on____individual_note_created
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+6. [ON] - Individual Note Created (Real Patient)
+   ├─ Internal Name: on____individual_note_created__real_patient_
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+7. [ON] - RCM Claim Sent
+   ├─ Internal Name: on____rcm_claim_sent
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+8. [ON] - RCM Fee Schedule Configured
+   ├─ Internal Name: on____rcm_fee_schedule_configured
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+9. [ON] - RCM Payers Enrolled
+   ├─ Internal Name: on____rcm_payers_enrolled
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+10. [ON] - Treatment Plan Created
+   ├─ Internal Name: treatment_plan_created
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+11. [ON] - Treatment Plan Created (Real Patient)
+   ├─ Internal Name: on____treatment_plan_created__real_patient_
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+12. [ON] - TTV - CRM Admission 🧮
+   ├─ Internal Name: on____ttv___crm_admission
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+13. [ON] - TTV - CRM Referrals 🧮
+   ├─ Internal Name: on____ttv___crm_referrals
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+14. [ON] - TTV - Group Note Created 🧮
+   ├─ Internal Name: on____ttv___group_note_created
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+15. [ON] - TTV - Group Note Created (Real Patient) 🧮
+   ├─ Internal Name: on____ttv___group_note_created__real_patient_
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+16. [ON] - TTV - Individual Note Created 🧮
+   ├─ Internal Name: on____ttv___individual_note_created
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+17. [ON] - TTV - Individual Note Created (Real Patient) 🧮
+   ├─ Internal Name: on____ttv___individual_note_created__real_patient_
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+18. [ON] - TTV - RCM Claim Sent 🧮
+   ├─ Internal Name: on____ttv___rcm_claim_sent
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+19. [ON] - TTV - RCM Fee Schedule Configured 🧮
+   ├─ Internal Name: on____ttv___rcm_fee_schedule_configured
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+20. [ON] - TTV - RCM Payers Enrolled 🧮
+   ├─ Internal Name: on____ttv___treatment_plan_created__real_patient___cloned_
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+21. [ON] - TTV - Treatment Plan Created 🧮
+   ├─ Internal Name: on____ttv___treatment_plan_created
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+22. [ON] - TTV - Treatment Plan Created (Real Patient) 🧮
+   ├─ Internal Name: on____ttv___treatment_plan_created__real_patient_
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+23. Proposal Stage (Legacy)
+   ├─ Internal Name: proposal_stage__legacy_
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   ├─ Description: This is just a backup of the data used to be on "Pricing Sent, Negotiating and C...
+   └─ Options: Pricing Sent, Negotiating, Contract Sent
+
+24. Time to Onboard 🧮
+   ├─ Internal Name: deal_age
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+25. Type of Demo (Legacy)
+   ├─ Internal Name: type_of_demo__legacy_
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   ├─ Description: This is just a backup of the data that used to be on "demo #1, demo #2, demo #3 ...
+   └─ Options: Demo #1 (EHR), Demo #2 (EHR/RCM), Demo #3 (EHR/RCM/CRM), Demo #4 (EHR/RCM/CRM), Free Trial
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 DEALINFORMATION (47 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. [CS] Facility Type (sync from Company) 🧮
+   ├─ Internal Name: cs__facility_type__sync_from_company_
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   ├─ Calculated: Yes (formula/automation field)
+   └─ Options: Substance Abuse, ABA, Mental Health, Therapy, Psychiatry/Psychology, Eating Disorders, Other
+
+2. Amount in company currency 🧮
+   ├─ Internal Name: amount_in_home_currency
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Description: The amount of the deal, using the exchange rate, in your company's currency
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+3. Campaign of last booking in meetings tool
+   ├─ Internal Name: engagements_last_meeting_booked_campaign
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: This UTM parameter shows which marketing campaign (e.g. a specific email) referr...
+   └─
+
+4. Care Setting
+   ├─ Internal Name: care_setting
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   └─ Options: Inpatient, Outpatient
+
+5. Close Date Moved #
+   ├─ Internal Name: close_date_moved__
+   ├─ Type: number
+   ├─ Field Type: number
+   └─
+
+6. Closed Lost Reason (Required)
+   ├─ Internal Name: closed_lost_reason__required_
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   └─ Options: Budget, Multiple Contacts - No Response, Choose Different Provider, Missing features, Solution does not meet criteria, Price, Staying with existing solutions, Other (text field required)
+
+7. Company Annual Revenue (Sync) 🧮
+   ├─ Internal Name: company_annual_revenue__sync_
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+8. Company Name
+   ├─ Internal Name: company_name
+   ├─ Type: string
+   ├─ Field Type: text
+   └─
+
+9. Currency
+   ├─ Internal Name: deal_currency_code
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   ├─ Description: Currency code for the deal.
+   └─
+
+10. Customization Fee
+   ├─ Internal Name: customization_fee
+   ├─ Type: number
+   ├─ Field Type: number
+   └─
+
+11. Date of last meeting booked in meetings tool
+   ├─ Internal Name: engagements_last_meeting_booked
+   ├─ Type: datetime
+   ├─ Field Type: date
+   ├─ Description: The date of the most recent meeting an associated contact has booked through the...
+   └─
+
+12. Deal Confidence
+   ├─ Internal Name: deal_confidence
+   ├─ Type: enumeration
+   ├─ Field Type: radio
+   └─ Options: Low, Medium, High
+
+13. Deal Substage
+   ├─ Internal Name: proposal_stage
+   ├─ Type: enumeration
+   ├─ Field Type: radio
+   └─ Options (9 total): Initial Demo Scheduled, Rescheduling Initial Demo, Attempting to Schedule follow-up Dem, Follow-Up Demo Scheduled, Assembling Proposal, Pricing, Negotiations, "Verbal", ...
+
+14. Estimated Calculator Date
+   ├─ Internal Name: original_go_live_date
+   ├─ Type: date
+   ├─ Field Type: date
+   └─
+
+15. Go Live Update - Reason
+   ├─ Internal Name: go_live_update___reason
+   ├─ Type: string
+   ├─ Field Type: textarea
+   └─
+
+16. Has been an MQL?
+   ├─ Internal Name: has_been_an_mql_
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: This property is a safeguard to avoid deals from skipping stages
+   └─ Options: Yes, No
+
+17. Has been in a demo?
+   ├─ Internal Name: has_been_a_demo_
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: This property is a safeguard to avoid deals from skipping stages
+   └─ Options: Yes, No
+
+18. Has been in Discovery?
+   ├─ Internal Name: has_been_a_discovery_
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: This property is a safeguard to avoid deals from skipping stages
+   └─ Options: Yes, No
+
+19. Has ben a SQL?
+   ├─ Internal Name: has_ben_a_sql_
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: This property is a safeguard to avoid deals from skipping stages
+   └─ Options: Yes, No
+
+20. Has PracticeSuite
+   ├─ Internal Name: has_practicesuite
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: This is whether or not the account has practice suite.
+   └─ Options: Yes, No
+
+21. Invoice Date
+   ├─ Internal Name: invoice_date
+   ├─ Type: string
+   ├─ Field Type: text
+   └─
+
+22. Last Activity Date
+   ├─ Internal Name: notes_last_updated
+   ├─ Type: datetime
+   ├─ Field Type: date
+   ├─ Description: The last time a note, call, email, meeting, or task was logged for a deal. This ...
+   └─
+
+23. Last Contacted
+   ├─ Internal Name: notes_last_contacted
+   ├─ Type: datetime
+   ├─ Field Type: date
+   ├─ Description: The last time a call, sales email, or meeting was logged for this deal. This is ...
+   └─
+
+24. Last Stage Before Closed
+   ├─ Internal Name: last_stage_before_closed
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   └─ Options (49 total): MQL (Sales), SQL (Sales), Discovery (Sales), Demo - Scheduled (Sales), Demo - Completed (Sales), Proposal (Sales), Closed Won (Sales), Closed Lost (Sales), ...
+
+25. Lead Source 
+   ├─ Internal Name: lead_source
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   └─ Options (65 total): Growbots, Conference, Outbound Sales, Software Advice, Customer Referral, Employee Referral, Website, Evolution of Psychotherapy, ...
+
+26. Lead Source (Sync) 🧮
+   ├─ Internal Name: lead_source__sync_
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   ├─ Calculated: Yes (formula/automation field)
+   └─ Options (16 total): Employee Referral, Partner, Webinar, Partner Referral, Customer Referral, PPC, Paid Lead, List, ...
+
+27. Lead Source Detail (Sync) 🧮
+   ├─ Internal Name: lead_source_detail__sync_
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   ├─ Calculated: Yes (formula/automation field)
+   └─ Options (85 total): SICcode.com, LeadGrabber, Louisiana Licensees, Maine Licensees, TS Opus CA ClinicalExecs, TS CA Opus Contacts Other, Software Advice, ZoomInfo, ...
+
+28. Lead Source Detail Notes (Sync) 🧮
+   ├─ Internal Name: lead_source_detail_notes__sync_
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+29. Medium of last booking in meetings tool
+   ├─ Internal Name: engagements_last_meeting_booked_medium
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: This UTM parameter shows which channel (e.g. email) referred an associated conta...
+   └─
+
+30. Migration Fee
+   ├─ Internal Name: migration_fee
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: Cost to migrate patient demographics and charts from their outgoing EMR 
+   └─
+
+31. Minimum Payment Date
+   ├─ Internal Name: minimum_payment_date
+   ├─ Type: date
+   ├─ Field Type: date
+   └─
+
+32. Next Activity Date
+   ├─ Internal Name: notes_next_activity_date
+   ├─ Type: datetime
+   ├─ Field Type: date
+   ├─ Description: The date of the next upcoming activity for a deal. This property is set automati...
+   └─
+
+33. Number of Users
+   ├─ Internal Name: number_of_users
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   ├─ Description: This is the number of users (customer seats) associated with the deal.
+   └─ Options: <20, 20-50, 51+
+
+34. Onboarding Fee
+   ├─ Internal Name: onboarding_fee
+   ├─ Type: number
+   ├─ Field Type: number
+   └─
+
+35. Organization Type
+   ├─ Internal Name: organization_type
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   └─ Options: Non-Profit, Government, For-Profit, Cooperative, Community Health Center, Faith-Based Organization, Other
+
+36. Owner assigned date
+   ├─ Internal Name: hubspot_owner_assigneddate
+   ├─ Type: datetime
+   ├─ Field Type: date
+   ├─ Description: The most recent timestamp of when an owner was assigned to this record. This val...
+   └─
+
+37. Previous Deal Stages
+   ├─ Internal Name: previous_deal_stages
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   └─ Options: MQL, SQL, Discovery, Demo - Scheduled, Demo - Completed, Proposal, Customer, Closed Lost
+
+38. Prior EHR 
+   ├─ Internal Name: prior_ehr
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   ├─ Description: What EHR/s did they have prior?
+   └─ Options (27 total): KIPU, Simple Practice, Therapy Notes, Best Notes, AdvancedMD (AMD), Ritten, ICANotes, Lightening Step, ...
+
+39. Prior EHR (Other)
+   ├─ Internal Name: prior_ehr__other_
+   ├─ Type: string
+   ├─ Field Type: text
+   └─
+
+40. Product/s
+   ├─ Internal Name: product_s
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   ├─ Description: What products are they shopping for?
+   └─ Options (25 total): EHR, RCM - (Services, BHRev), RCM - (Software, Imagine), EHR - Copilot AI (Nabla), CRM - (LeadSquared), EHR - e-Prescribe (DoseSpot), PracticeSuite, EHR - Kiosk, ...
+
+41. Referring Agent (from Contact)
+   ├─ Internal Name: referring_agent__from_contact_
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   └─ Options (10 total): John Jay Catipon, Hanz Salcedo, Gabriel Lacap, Justine Lising, Louis Raphael Pulido, Janelle Hall, Laura Gil, Rey Calunia, ...
+
+42. Service Delivery Setting
+   ├─ Internal Name: service_delivery_setting
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   └─ Options: Telehealth, In-Person, Hybrid
+
+43. Source of last booking in meetings tool
+   ├─ Internal Name: engagements_last_meeting_booked_source
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: This UTM parameter shows which site (e.g. Twitter) referred an associated contac...
+   └─
+
+44. Specialty
+   ├─ Internal Name: specialty
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   └─ Options: Substance Abuse, ABA, Mental Health, Therapy, Psychiatry/Psychology, Eating Disorder, Other
+
+45. test calculation 🧮
+   ├─ Internal Name: test_calculation
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+46. Time Between Deal Creation and Closed Lost 🧮
+   ├─ Internal Name: time_between_deal_creation_and_closed_lost
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+47. Time Between Deal Creation and Closed Won 🧮
+   ├─ Internal Name: time_between_deal_creation_and_closed_won
+   ├─ Type: number
+   ├─ Field Type: calculation_equation
+   ├─ Calculated: Yes (formula/automation field)
+   └─
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 GRAIN (1 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. At Risk
+   ├─ Internal Name: grain_at_risk
+   ├─ Type: bool
+   ├─ Field Type: booleancheckbox
+   ├─ Description: Grain infers whether or not the deal is at risk
+   └─ Options: False, True
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 GRAIN_OLD (5 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. Competition
+   ├─ Internal Name: grain_competition
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: List of competitors mentioned during the call
+   └─
+
+2. Customer Budget
+   ├─ Internal Name: grain_budget
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: List of moments where the customer discusses their budget
+   └─
+
+3. Customer Needs
+   ├─ Internal Name: grain_customer_needs
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: List of moments where the customer discusses their needs in a solution
+   └─
+
+4. Next Meeting
+   ├─ Internal Name: grain_timeline
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: When is the next meeting with the customer
+   └─
+
+5. Stakeholders
+   ├─ Internal Name: grain_stakeholders
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: Who are the stakeholders in the customer's organization
+   └─
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 IP__ECOMM_BRIDGE__ECOMM_BRIDGE (8 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. Abandoned cart URL
+   ├─ Internal Name: ip__ecomm_bridge__abandoned_cart_url
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: A link to recover the cart for a deal that has been abandoned.
+   └─
+
+2. Discount savings
+   ├─ Internal Name: ip__ecomm_bridge__discount_amount
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The discount on the deal as an amount.
+   └─
+
+3. Ecommerce deal
+   ├─ Internal Name: ip__ecomm_bridge__ecomm_synced
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: Is this deal being synced with an ecommerce app or integration?
+   └─ Options: False, True
+
+4. Order number
+   ├─ Internal Name: ip__ecomm_bridge__order_number
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: A unique numeric identifier for the deal.
+   └─
+
+5. Shipment IDs
+   ├─ Internal Name: ip__ecomm_bridge__shipment_ids
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: List of all known shipment IDs associated with the deal.
+   └─
+
+6. Source app ID 🔒
+   ├─ Internal Name: ip__ecomm_bridge__source_app_id
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   ├─ Description: The ID of the ecommerce app that created this deal.
+   ├─ Hidden: Yes (not visible in UI by default)
+   └─ Options: 0, 51381
+
+7. Source store
+   ├─ Internal Name: ip__ecomm_bridge__source_store_id
+   ├─ Type: enumeration
+   ├─ Field Type: checkbox
+   ├─ Description: The name of the store that created this deal.
+   └─ Options: OPUS EHR
+
+8. Tax price
+   ├─ Internal Name: ip__ecomm_bridge__tax_amount
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The tax price on the deal as an amount.
+   └─
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 IP__SHOPIFY__SHOPIFY (20 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. Buyer accepts marketing
+   ├─ Internal Name: ip__shopify__buyer_accepts_marketing
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: Indicates whether the customer has opted in or out of receiving marketing emails...
+   └─ Options: False, True
+
+2. Cancel reason
+   ├─ Internal Name: ip__shopify__cancel_reason
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   ├─ Description: The reason why the order was cancelled.
+   └─ Options: Customer, Declined, Fraud, Inventory, Other
+
+3. Cancelled at
+   ├─ Internal Name: ip__shopify__cancelled_at
+   ├─ Type: datetime
+   ├─ Field Type: date
+   ├─ Description: The date and time when the order was cancelled.
+   └─
+
+4. Cart token
+   ├─ Internal Name: ip__shopify__cart_token
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: Unique identifier for a particular cart that is attached to a particular order.
+   └─
+
+5. Checkout token
+   ├─ Internal Name: ip__shopify__checkout_token
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: Unique identifier for the checkout that started this order.
+   └─
+
+6. Currency
+   ├─ Internal Name: ip__shopify__currency
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The three letter code (ISO 4217) for the currency used for the payment.
+   └─
+
+7. Financial status
+   ├─ Internal Name: ip__shopify__financial_status
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   ├─ Description: The payment status of this order.
+   └─ Options: Authorized, Paid, Partially paid, Partially refunded, Pending, Refunded, Voided
+
+8. Fulfillment status
+   ├─ Internal Name: ip__shopify__fulfillment_status
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   ├─ Description: The overall fulfillment status of this order.
+   └─ Options: Cancelled, Fulfilled, Not eligible, Null, Open, Partial, Pending, Restocked
+
+9. Landing site
+   ├─ Internal Name: ip__shopify__landing_site
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The URL for the page where the buyer landed when entering the shop.
+   └─
+
+10. Name
+   ├─ Internal Name: ip__shopify__name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The customer's order name as represented by a number.
+   └─
+
+11. Processed at
+   ├─ Internal Name: ip__shopify__processed_at
+   ├─ Type: datetime
+   ├─ Field Type: date
+   ├─ Description: The date and time the order was imported.
+   └─
+
+12. Processing method
+   ├─ Internal Name: ip__shopify__processing_method
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The type of payment processing method.
+   └─
+
+13. Referring site
+   ├─ Internal Name: ip__shopify__referring_site
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The website that the customer clicked on to come to the shop.
+   └─
+
+14. Source name
+   ├─ Internal Name: ip__shopify__source_name
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: Where the order originated.
+   └─
+
+15. Subtotal price
+   ├─ Internal Name: ip__shopify__subtotal_price
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: Price of the order before shipping and taxes.
+   └─
+
+16. Tags
+   ├─ Internal Name: ip__shopify__tags
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: Tags are additional short descriptors, commonly used for filtering and searching...
+   └─
+
+17. Taxes included
+   ├─ Internal Name: ip__shopify__taxes_included
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   ├─ Description: States whether or not taxes are included in the order subtotal.
+   └─ Options: False, True
+
+18. Token
+   ├─ Internal Name: ip__shopify__token
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: Unique identifier for a particular order.
+   └─
+
+19. Total line items price
+   ├─ Internal Name: ip__shopify__total_line_items_price
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The sum of all the prices of all the items in the order.
+   └─
+
+20. Total weight
+   ├─ Internal Name: ip__shopify__total_weight
+   ├─ Type: number
+   ├─ Field Type: number
+   ├─ Description: The sum of all the weights of the line items in the order, in grams.
+   └─
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 IP__SYNC_EXTENSION__SYNC_EXTENSION (2 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. Source account ID 🔒
+   ├─ Internal Name: ip__sync_extension__external_source_account_id
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The ID of the external account that synced with this deal.
+   ├─ Hidden: Yes (not visible in UI by default)
+   └─
+
+2. Source app ID 🔒
+   ├─ Internal Name: ip__sync_extension__external_source_app_id
+   ├─ Type: string
+   ├─ Field Type: text
+   ├─ Description: The ID of the app that synced with this deal.
+   ├─ Hidden: Yes (not visible in UI by default)
+   └─
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+📁 SALESFORCEINFORMATION (6 properties)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. Budget Confirmed
+   ├─ Internal Name: budget_confirmed__c
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   └─ Options: No, Yes
+
+2. Discovery Completed
+   ├─ Internal Name: discovery_completed__c
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   └─ Options: No, Yes
+
+3. Last Salesforce Sync Time
+   ├─ Internal Name: salesforcelastsynctime
+   ├─ Type: datetime
+   ├─ Field Type: date
+   └─
+
+4. Loss Reason
+   ├─ Internal Name: loss_reason__c
+   ├─ Type: enumeration
+   ├─ Field Type: select
+   └─ Options: Lost to Competitor, No Budget / Lost Funding, No Decision / Non-Responsive, Price, Other
+
+5. ROI Analysis Completed
+   ├─ Internal Name: roi_analysis_completed__c
+   ├─ Type: enumeration
+   ├─ Field Type: booleancheckbox
+   └─ Options: No, Yes
+
+6. salesforcedeleted 🔒
+   ├─ Internal Name: salesforcedeleted
+   ├─ Type: bool
+   ├─ Field Type: select
+   ├─ Hidden: Yes (not visible in UI by default)
+   └─ Options: No, Yes
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+📋 CUSTOM PROPERTIES BY TYPE:
+
+   • string: 46 properties
+   • number: 45 properties
+   • enumeration: 37 properties
+   • datetime: 19 properties
+   • date: 14 properties
+   • bool: 3 properties
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+💡 LEGEND:
+   🧮 = Calculated/Formula Field (auto-computed)
+   🔒 = Hidden Property (not visible in UI by default)
+
+📖 USAGE TIPS:
+   • These are custom fields created specifically for your organization
+   • Use the "Internal Name" when querying via API
+   • Calculated properties are read-only (values set by formulas)
+   • Hidden properties can still be accessed via API
+   • You can modify/delete custom properties in HubSpot Settings > Properties
+
+💾 TO EXPORT THIS DATA:
+   • Text file: npm run custom-properties > custom-properties-list.txt
+   • Or modify this script to export JSON/CSV format
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
