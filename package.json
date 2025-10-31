@@ -10,8 +10,11 @@
     "dev": "tsx src/index.ts",
     "fetch-deals": "tsx src/index.ts",
     "discover-properties": "tsx src/properties-discovery.ts",
+    "all-properties": "tsx src/all-properties.ts",
+    "custom-properties": "tsx src/custom-properties.ts",
     "deal-hygiene": "tsx src/deal-hygiene.ts",
     "forecast": "tsx src/forecast.ts",
+    "weekly-forecast": "tsx src/weekly-forecast.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },

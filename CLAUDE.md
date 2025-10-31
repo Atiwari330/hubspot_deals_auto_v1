@@ -7,8 +7,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 HubSpot Deals Auto v1 is a TypeScript CLI application for automated HubSpot CRM deal management. Built for a VP of Revenue Operations at an EHR software company, it focuses on:
 
 - **Deal Fetching**: Retrieves deals from specific pipeline stages ("Proposal" and "Demo - Completed")
-- **Deal Hygiene Monitoring**: Validates 13 required deal properties and calculates completeness scores
+- **Deal Hygiene Monitoring**: Validates 12 required deal properties and calculates completeness scores
 - **Quarterly Sales Forecasting**: Analyzes Proposal-stage deals closing in current quarter to forecast ARR
+- **Weekly Pipeline Forecasting**: Generates weekly board reports with weighted pipeline, active deals, and closed won/lost tracking
 - **AI-Powered Reporting**: Uses OpenAI GPT-4o-mini to generate automated email reports about missing deal data and revenue forecasts
 
 ## Essential Commands
@@ -17,6 +18,7 @@ HubSpot Deals Auto v1 is a TypeScript CLI application for automated HubSpot CRM 
 npm run fetch-deals        # Fetch and display deals from Proposal/Demo stages
 npm run deal-hygiene       # Check deal data quality and generate AI email report
 npm run forecast           # Generate quarterly sales forecast for Proposal-stage deals
+npm run weekly-forecast    # Generate weekly pipeline forecast for board reporting
 npm run discover-properties # Explore available HubSpot deal properties
 npm run build              # Compile TypeScript to dist/
 npm start                  # Run compiled application
@@ -24,8 +26,9 @@ npm start                  # Run compiled application
 
 **Usage Notes:**
 - `fetch-deals`: Displays comprehensive deal information with all 60+ properties, owner details, and financial metrics
-- `deal-hygiene`: Critical tool that validates 13 required fields, scores deals (Excellent/Good/Poor), and generates professional email reports organized by owner
+- `deal-hygiene`: Critical tool that validates 12 required fields, scores deals (Excellent/Good/Poor), and generates professional email reports organized by owner
 - `forecast`: Analyzes Proposal-stage deals closing in current quarter, calculates total forecasted ARR, and generates AI-powered email with monthly/owner breakdowns
+- `weekly-forecast`: Generates weekly pipeline health dashboard tracking SQL/Demo/Proposal stages with weighted pipeline calculations, closed won/lost metrics, and stage distribution analysis
 - `discover-properties`: Utility to explore HubSpot's property schema and find internal property names for custom fields
 
 ## High-Level Architecture
@@ -45,7 +48,7 @@ npm start                  # Run compiled application
 
 **deal-hygiene.ts** - Data Quality Checker & AI Report Generator (433 lines)
 - Entry point for `npm run deal-hygiene`
-- Validates 13 required properties (defined in `types.ts`)
+- Validates 12 required properties (defined in `types.ts`)
 - Calculates completeness scores: Excellent (90-100%), Good (70-89%), Poor (<70%)
 - Generates AI email reports using OpenAI `gpt-4o-mini` model
 - Groups missing fields by deal owner for accountability
@@ -61,10 +64,21 @@ npm start                  # Run compiled application
 - Creates AI-powered email reports using OpenAI `gpt-4o-mini` model
 - Skips deals missing close date or amount fields
 
-**types.ts** - Type Definitions & Business Rules (150+ lines)
-- Defines `REQUIRED_PROPERTIES`: 13 critical fields for hygiene checking
+**weekly-forecast.ts** - Weekly Pipeline Forecast Generator (600+ lines)
+- Entry point for `npm run weekly-forecast`
+- Analyzes deals in "SQL", "Demo Completed", and "Proposal" stages from Sales pipeline
+- Week definition: Monday-Sunday (reports "Week Ending" on Sunday)
+- Calculates weighted pipeline using stage-specific probability weights (SQL: 30%, Demo: 30%, Proposal: 50%)
+- Tracks closed won and closed lost deals from current week using `hs_date_entered_closedwon` and `hs_date_entered_closedlost`
+- Generates stage breakdown with deal counts, pipeline amounts, weighted amounts, and percentages
+- Creates AI-powered board-ready email reports using OpenAI `gpt-4o-mini` model
+- Designed for weekly board meetings with executive summary format
+
+**types.ts** - Type Definitions & Business Rules (200+ lines)
+- Defines `REQUIRED_PROPERTIES`: 12 critical fields for hygiene checking
 - TypeScript interfaces for hygiene reports and summaries
-- TypeScript interfaces for forecast reports (`QuarterInfo`, `ForecastDeal`, `MonthlyForecast`, `OwnerForecast`, `ForecastSummary`)
+- TypeScript interfaces for quarterly forecast reports (`QuarterInfo`, `ForecastDeal`, `MonthlyForecast`, `OwnerForecast`, `ForecastSummary`)
+- TypeScript interfaces for weekly forecast reports (`WeeklyForecastMetrics`, `StageForecast`, `WeeklyForecastReport`)
 - Helper: `isPropertyMissing()` - determines if a property value is considered empty
 
 **agent.ts** - Vercel AI SDK Integration (93 lines)
@@ -86,16 +100,16 @@ HubSpot API (hubspot.ts)
     ↓
 Deal Data + Owner Data
     ↓
-┌──────────────┬─────────────────┬──────────────────┬───────────────────┐
-│              │                 │                  │                   │
-index.ts   deal-hygiene.ts   forecast.ts      agent.ts (future)
-│              │                 │                  │
-Display    Validate & Score  Filter by Quarter    AI Queries
-All Deals      ↓                 & Calculate ARR
-           OpenAI GPT-4o-mini        ↓
-               ↓               OpenAI GPT-4o-mini
-           Email Report            ↓
-                              Email Forecast
+┌──────────────┬─────────────────┬──────────────────┬──────────────────┬───────────────────┐
+│              │                 │                  │                  │                   │
+index.ts   deal-hygiene.ts   forecast.ts      weekly-forecast.ts   agent.ts (future)
+│              │                 │                  │                  │
+Display    Validate & Score  Filter by Quarter  Track Active +      AI Queries
+All Deals      ↓                 & Calculate ARR   Closed Deals (Week)
+           OpenAI GPT-4o-mini        ↓                  ↓
+               ↓               OpenAI GPT-4o-mini  OpenAI GPT-4o-mini
+           Email Report            ↓                  ↓
+                              Email Forecast     Board Email Report
 ```
 
 ## Configuration
@@ -116,22 +130,21 @@ OPENAI_API_KEY=your_key_here
 - `crm.objects.companies.read`
 - `crm.objects.contacts.read`
 
-### 13 Required Properties for Hygiene Checking
+### 12 Required Properties for Hygiene Checking
 
 Defined in `src/types.ts` as `REQUIRED_PROPERTIES`:
-1. `amount` - Deal value
-2. `closedate` - Close date
-3. `hs_tcv` - Total Contract Value
-4. `hs_arr` - Annual Recurring Revenue
-5. `hs_mrr` - Monthly Recurring Revenue
-6. `hs_acv` - Annual Contract Value
-7. `num_contacted_notes` - Contact notes count
-8. `product_s` - Product selection
-9. `deal_type` - Type of deal
-10. `prior_ehr` - Prior EHR system
-11. `patient_volume` - Patient volume
-12. `proposal_stage` - Proposal stage
-13. `demo_date` - Demo date
+1. `product_s` - Product/s
+2. `prior_ehr` - Prior EHR system
+3. `hs_all_collaborator_owner_ids` - Deal Collaborator
+4. `notes_last_updated` - Last Activity Date (EDT)
+5. `notes_next_activity_date` - Next Activity Date (EDT)
+6. `hs_next_step` - Next Step
+7. `closedate` - Close Date (EDT)
+8. `dealname` - Deal Name
+9. `hubspot_owner_id` - Deal Owner
+10. `dealstage` - Deal Stage
+11. `proposal_stage` - Deal Substage
+12. `amount` - Deal Amount
 
 ## Important Patterns & Conventions
 
@@ -261,7 +274,7 @@ Or modify the existing filter in `deal-hygiene.ts:34-36`.
 
 ## GitHub Actions Automation
 
-The project includes two automated workflows:
+The project includes three automated workflows:
 
 **1. Daily Deal Hygiene Check** (`.github/workflows/daily-deal-hygiene.yml`)
 - Runs twice daily: 8:00 AM EDT and 1:28 PM EDT
@@ -273,13 +286,19 @@ The project includes two automated workflows:
 - Executes `npm run forecast`
 - Generates current quarter revenue projections
 
-Both workflows use GitHub secrets for API keys and support manual triggering via `workflow_dispatch`.
+**3. Weekly Pipeline Forecast** (`.github/workflows/weekly-forecast.yml`)
+- Runs weekly on Fridays at 5:00 PM EDT
+- Executes `npm run weekly-forecast`
+- Generates board-ready pipeline health reports with weighted forecasts
+
+All workflows use GitHub secrets for API keys and support manual triggering via `workflow_dispatch`.
 
 ## Notes
 
 - The `agent.ts` module is prepared for future Vercel AI SDK integration but not currently used in main workflows
 - Property display names are hardcoded mappings in display functions (not fetched from HubSpot metadata)
 - Deal owner information requires separate API calls, handled efficiently with parallel fetching
-- OpenAI API key is required for both `deal-hygiene` and `forecast` commands
+- OpenAI API key is required for `deal-hygiene`, `forecast`, and `weekly-forecast` commands
 - All AI reports use the `gpt-4o-mini` model for cost-effective, high-quality text generation
 - Forecast assumes the `amount` field already contains ARR - no multiplication or conversion is performed
+- Weekly forecast uses industry-standard stage weights: SQL (30%), Demo Completed (30%), Proposal (50%)
