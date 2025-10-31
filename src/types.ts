@@ -29,6 +29,9 @@ export interface DealHygieneReport {
   totalRequired: number;
   totalPresent: number;
   totalMissing: number;
+  closeDate: Date | null;  // Parsed close date
+  closeDateString: string | null; // Formatted close date for display
+  isCloseDatePastDue: boolean; // Whether close date is in the past
 }
 
 export interface HygieneSummary {
@@ -45,6 +48,8 @@ export interface HygieneSummary {
     poor: DealHygieneReport[];       // Below 70%
   };
   dealsWithIssues: DealHygieneReport[]; // Missing 1+ properties
+  dealsWithPastDueCloseDates: DealHygieneReport[]; // Close date is in the past
+  pastDueCount: number; // Count of deals with past-due close dates
 }
 
 /**
