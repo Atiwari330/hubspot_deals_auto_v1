@@ -1,0 +1,57 @@
+name: Daily Deal Hygiene Check with Google Drive Upload
+
+# Schedule to run twice daily: 8:00 AM EDT and 1:28 PM EDT (Miami, Florida)
+# This workflow saves hygiene reports to Google Drive automatically
+on:
+  schedule:
+    # Runs at 12:00 PM UTC (8:00 AM EDT)
+    - cron: '0 12 * * *'
+    # Runs at 5:28 PM UTC (1:28 PM EDT)
+    - cron: '28 17 * * *'
+
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  deal-hygiene-gdrive:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Step 3: Install dependencies (includes googleapis)
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4: Run the deal hygiene script with Google Drive upload
+      - name: Run deal hygiene check with Google Drive upload
+        env:
+          # HubSpot and OpenAI credentials
+          HUBSPOT_ACCESS_TOKEN: ${{ secrets.HUBSPOT_ACCESS_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Google OAuth 2.0 credentials (replaces service account)
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+        run: npm run deal-hygiene-gdrive
+
+      # Step 5: Upload console output as artifact (backup in case Google Drive fails)
+      - name: Upload console output as backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deal-hygiene-gdrive-console-${{ github.run_number }}
+          path: |
+            ./*.log
+            ./*.txt
+          if-no-files-found: ignore

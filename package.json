@@ -13,6 +13,8 @@
     "all-properties": "tsx src/all-properties.ts",
     "custom-properties": "tsx src/custom-properties.ts",
     "deal-hygiene": "tsx src/deal-hygiene.ts",
+    "deal-hygiene-gdrive": "tsx src/deal-hygiene-gdrive.ts",
+    "google-oauth-setup": "tsx src/scripts/google-oauth-setup.ts",
     "forecast": "tsx src/forecast.ts",
     "weekly-forecast": "tsx src/weekly-forecast.ts",
     "stage-aging": "tsx src/stage-aging.ts",
@@ -33,6 +35,7 @@
     "@ai-sdk/openai": "^2.0.56",
     "ai": "^5.0.81",
     "dotenv": "^17.2.3",
+    "googleapis": "^164.1.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
